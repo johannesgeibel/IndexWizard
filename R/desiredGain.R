@@ -3,13 +3,25 @@
 #' @param w Numeric vector of n economic weights. Traits present in G, but not part of the index need to be coded as 0.
 #' @param G Named n*n genetic variance- covariance matrix. Dimnames of G need to match E/r to ensure correct sorting.
 #' @param E Named m*m (m <= n) residual variance- covariance matrix. If only a numeric vector is supplied, residuals will be assumed to be uncorrelated.
-#' @param r Named numeric vector of reliabilites with length m. If E!=NULL, calculated from G and E.
+#' @param r Named numeric vector of reliabilites with length m. If E != NULL, calculated from G and E.
 #' @param i Selection intensity
 #'
 #' @return
 #' @export
 #'
 #' @examples
+#'
+#' SelInd(
+#' w = c(A=0.2,B=1,C=0,D=3),
+#' G = matrix(c(1,0,0,0,
+#'              0,2,0,0,
+#'              0,0,1,0.5,
+#'              0,0,0.5,1),4,4,
+#'            dimnames = list(c('A','C','B','D'),c('A','C','B','D'))),
+#' r = c(D=0.2,A=0.7),
+#' i = 0.02
+#' )
+#'
 SelInd <- function(
     w,
     G,
@@ -118,13 +130,3 @@ SelInd <- function(
 }
 
 
-SelInd(
-  w = c(A=0.2,B=1,C=0,D=3),
-  G = matrix(c(1,0,0,0,
-               0,2,0,0,
-               0,0,1,0.5,
-               0,0,0.5,1),4,4,
-             dimnames = list(c('A','C','B','D'),c('A','C','B','D'))),
-  r = c(D=0.2,A=0.7),
-  i = 0.02
-)
