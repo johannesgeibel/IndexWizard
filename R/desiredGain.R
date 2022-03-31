@@ -25,7 +25,8 @@ SelInd <- function(
     r = r,
     b = NULL,
     i = i,
-    d = NULL
+    d = NULL,
+    dG = NULL
   )
   class(out) <- "SelInd"
 
@@ -102,6 +103,7 @@ SelInd <- function(
   # calc expected composition of genetic trend ---------------------------------
   if(!is.null(out$i)){
     out$d <- (out$i / sqrt(out$var_I)[1,1] ) * (out$G %*% t(out$D) %*% R %*% out$b)
+    out$dG <- t(out$d) %*% out$w
   }else{
     warning("no selection intensity provided, cannot compute the expected genetic trend")
   }
@@ -110,6 +112,8 @@ SelInd <- function(
   out$b <- out$b[,1]
   out$var_I <- out$var_I[1,1]
   if(!is.null(out$d)) out$d <- out$d[,1]
+  if(!is.null(out$dG)) out$dG <- out$dG[1,1]
+
   return(out)
 }
 
