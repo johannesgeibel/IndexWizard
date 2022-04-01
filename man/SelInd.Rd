@@ -7,13 +7,13 @@
 SelInd(w, G, E = NULL, r = NULL, i = NULL, h2 = NULL, d_obs = NULL)
 }
 \arguments{
-\item{w}{Numeric vector of n economic weights. Traits present in G, but not part of the index need to be coded as 0.}
+\item{w}{Numeric vector of n economic weights. Traits present in G, but not part of the index need to be coded as 0. Required.}
 
-\item{G}{Named n*n genetic variance- covariance matrix. Dimnames of G need to match E/r to ensure correct sorting.}
+\item{G}{Named n*n genetic variance- covariance matrix. Dimnames of G need to match E/r to ensure correct sorting.  Required.}
 
 \item{E}{Named m*m (m <= n) residual variance- covariance matrix. If only a numeric vector is supplied, residuals will be assumed to be uncorrelated.}
 
-\item{r}{Named numeric vector of reliabilites with length m. If E != NULL, calculated from G and E.}
+\item{r}{Named numeric vector of reliabilites with length m. If E != NULL, calculated from G and E.  Required if E not given.}
 
 \item{i}{Selection intensity}
 
@@ -22,7 +22,7 @@ SelInd(w, G, E = NULL, r = NULL, i = NULL, h2 = NULL, d_obs = NULL)
 \item{d_real}{named numeric vector of length n containing the observed composition of the genetic gain scaled in genetic standard deviations. If sum(d_real) != 1, it will be rescaled.}
 }
 \value{
-
+A list of class SelInd
 }
 \description{
 Function to calculate selection index

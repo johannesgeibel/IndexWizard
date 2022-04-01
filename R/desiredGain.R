@@ -1,16 +1,16 @@
 #' Function to calculate selection index
 #'
-#' @param w Numeric vector of n economic weights. Traits present in G, but not part of the index need to be coded as 0.
-#' @param G Named n*n genetic variance- covariance matrix. Dimnames of G need to match E/r to ensure correct sorting.
+#' @param w Numeric vector of n economic weights. Traits present in G, but not part of the index need to be coded as 0. Required.
+#' @param G Named n*n genetic variance- covariance matrix. Dimnames of G need to match E/r to ensure correct sorting.  Required.
 #' @param E Named m*m (m <= n) residual variance- covariance matrix. If only a numeric vector is supplied, residuals will be assumed to be uncorrelated.
-#' @param r Named numeric vector of reliabilites with length m. If E != NULL, calculated from G and E.
+#' @param r Named numeric vector of reliabilites with length m. If E != NULL, calculated from G and E.  Required if E not given.
 #' @param i Selection intensity
 #' @param h2 named numeric vector of length n containing heritabilities for the traits
 #' @param d_real named numeric vector of length n containing the observed composition of the genetic gain scaled in genetic standard deviations. If sum(d_real) != 1, it will be rescaled.
 #'
 #' @details The framework allows to have less traits in the selection index than in the breeding goal (m < n). Calculation of realized economic weights, however, requires m == n.
 #'
-#' @return
+#' @return A list of class SelInd
 #' @export
 #'
 #' @examples
