@@ -4,7 +4,7 @@
 \alias{SelInd}
 \title{Function to calculate selection index}
 \usage{
-SelInd(w, G, E = NULL, r = NULL, i = NULL)
+SelInd(w, G, E = NULL, r = NULL, i = NULL, h2 = NULL)
 }
 \arguments{
 \item{w}{Numeric vector of n economic weights. Traits present in G, but not part of the index need to be coded as 0.}
@@ -16,6 +16,8 @@ SelInd(w, G, E = NULL, r = NULL, i = NULL)
 \item{r}{Named numeric vector of reliabilites with length m. If E != NULL, calculated from G and E.}
 
 \item{i}{Selection intensity}
+
+\item{h2}{named numeric vector of length n containing heritabilities for the traits}
 }
 \value{
 
@@ -33,7 +35,8 @@ G = matrix(c(1,0,0,0,
              0,0,0.5,1),4,4,
            dimnames = list(c('A','C','B','D'),c('A','C','B','D'))),
 r = c(D=0.2,A=0.7),
-i = 0.02
+i = 0.02,
+h2 = c(A=0.2,B=0.2,C=0.2,D=0.3)
 )
 
 }

@@ -5,6 +5,7 @@
 #' @param E Named m*m (m <= n) residual variance- covariance matrix. If only a numeric vector is supplied, residuals will be assumed to be uncorrelated.
 #' @param r Named numeric vector of reliabilites with length m. If E != NULL, calculated from G and E.
 #' @param i Selection intensity
+#' @param h2 named numeric vector of length n containing heritabilities for the traits
 #'
 #' @return
 #' @export
@@ -19,7 +20,8 @@
 #'              0,0,0.5,1),4,4,
 #'            dimnames = list(c('A','C','B','D'),c('A','C','B','D'))),
 #' r = c(D=0.2,A=0.7),
-#' i = 0.02
+#' i = 0.02,
+#' h2 = c(A=0.2,B=0.2,C=0.2,D=0.3)
 #' )
 #'
 SelInd <- function(
@@ -27,7 +29,8 @@ SelInd <- function(
     G,
     E = NULL,
     r = NULL,
-    i = NULL
+    i = NULL,
+    h2 = NULL
 ){
   # initialize central object --------------------------------------------------
   out <- list(
@@ -38,7 +41,8 @@ SelInd <- function(
     b = NULL,
     i = i,
     d = NULL,
-    dG = NULL
+    dG = NULL,
+    h2 = h2
   )
   class(out) <- "SelInd"
 
@@ -105,6 +109,16 @@ SelInd <- function(
     # check length of r
     # calc difference between E and r
   }
+  # check h2
+  if(!is.null(out$h2)){
+    if(length(out$h2) != length(out$w)){
+      stop("length of h2 does not equal length of w")
+    }else if(any(!names(out$h2) %in% names(out$w))){
+      stop("h2 containes traits not in w")
+    }else{
+      out$h2 <- out$h2[names(out$w)]
+    }
+  }
 
   # calc index weights ---------------------------------------------------------
   out$b <- solve(R %*% (out$D %*% out$G %*% t(out$D)) %*% R) %*% R %*% out$D %*% out$G %*% out$w
@@ -112,12 +126,29 @@ SelInd <- function(
   # calc variance of index -----------------------------------------------------
   out$var_I <- t(out$b) %*% R %*% (out$D %*% out$G %*% t(out$D) + out$E) %*% R %*% out$b
 
-  # calc expected composition of genetic trend ---------------------------------
+  # calc expected composition of genetic and phenotypic trend ---------------------------------
   if(!is.null(out$i)){
     out$d <- (out$i / sqrt(out$var_I)[1,1] ) * (out$G %*% t(out$D) %*% R %*% out$b)
     out$dG <- t(out$d) %*% out$w
+    if(!is.null(out$h2)){
+      out$d_P <- out$d * sqrt(out$h2) / sqrt(g)
+    }else{
+      warning("no heritybilities provided, cannot compute the expected phenotypic trend")
+    }
   }else{
-    warning("no selection intensity provided, cannot compute the expected genetic trend")
+    warning("no selection intensity provided, cannot compute the expected genetic and phenotypic trend")
+  }
+
+  # calc analytical measures ---------------------------------------------------
+  out$r_IP <- (t(out$b) %*% (R %*% out$D %*% out$G %*% t(out$D))) / (sqrt(out$var_I[1,1] * diag(R %*% out$D %*% out$G %*% t(out$D))))
+  out$r_IH <- 1 - sqrt(1 - t(out$b^2) /
+                         (t(out$b) %*% R %*% ( out$D %*% out$G %*% t(out$D) + out$E) %*% R %*% out$b %*% diag(solve(R %*% ( out$D %*% out$G %*% t(out$D) + out$E) %*% R))) )
+
+  # first derivative -----------------------------------------------------------
+  if(!is.null(out$i)){
+    out$del_d <- (out$i / sqrt(out$var_I))[1,1] * out$G %*% t(out$D) %*% solve(out$D %*% out$G %*% t(out$D) + out$E) %*% out$D %*% out$G %*% w
+  }else{
+    warning("first derivative od d by w can only be calculated if selescion intensity (i) is supplied")
   }
 
   # return output --------------------------------------------------------------
@@ -125,7 +156,7 @@ SelInd <- function(
   out$var_I <- out$var_I[1,1]
   if(!is.null(out$d)) out$d <- out$d[,1]
   if(!is.null(out$dG)) out$dG <- out$dG[1,1]
-
+  if(!is.null(out$del_d)) out$del_d <- out$del_d[,1]
   return(out)
 }
 
