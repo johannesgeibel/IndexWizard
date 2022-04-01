@@ -4,7 +4,7 @@
 \alias{SelInd}
 \title{Function to calculate selection index}
 \usage{
-SelInd(w, G, E = NULL, r = NULL, i = NULL, h2 = NULL)
+SelInd(w, G, E = NULL, r = NULL, i = NULL, h2 = NULL, d_obs = NULL)
 }
 \arguments{
 \item{w}{Numeric vector of n economic weights. Traits present in G, but not part of the index need to be coded as 0.}
@@ -18,12 +18,17 @@ SelInd(w, G, E = NULL, r = NULL, i = NULL, h2 = NULL)
 \item{i}{Selection intensity}
 
 \item{h2}{named numeric vector of length n containing heritabilities for the traits}
+
+\item{d_real}{named numeric vector of length n containing the observed composition of the genetic gain scaled in genetic standard deviations. If sum(d_real) != 1, it will be rescaled.}
 }
 \value{
 
 }
 \description{
 Function to calculate selection index
+}
+\details{
+The framework allows to have less traits in the selection index than in the breeding goal (m < n). Calculation of realized economic weights, however, requires m == n.
 }
 \examples{
 

@@ -6,6 +6,9 @@
 #' @param r Named numeric vector of reliabilites with length m. If E != NULL, calculated from G and E.
 #' @param i Selection intensity
 #' @param h2 named numeric vector of length n containing heritabilities for the traits
+#' @param d_real named numeric vector of length n containing the observed composition of the genetic gain scaled in genetic standard deviations. If sum(d_real) != 1, it will be rescaled.
+#'
+#' @details The framework allows to have less traits in the selection index than in the breeding goal (m < n). Calculation of realized economic weights, however, requires m == n.
 #'
 #' @return
 #' @export
@@ -30,7 +33,8 @@ SelInd <- function(
     E = NULL,
     r = NULL,
     i = NULL,
-    h2 = NULL
+    h2 = NULL,
+    d_obs = NULL
 ){
   # initialize central object --------------------------------------------------
   out <- list(
@@ -42,7 +46,8 @@ SelInd <- function(
     i = i,
     d = NULL,
     dG = NULL,
-    h2 = h2
+    h2 = h2,
+    d_obs = d_obs
   )
   class(out) <- "SelInd"
 
@@ -120,6 +125,21 @@ SelInd <- function(
     }
   }
 
+  # check d_obs
+  if(!is.null(out$d_obs)){
+    if(length(out$d_obs) != length(out$w)){
+      stop("length of d_obs does not equal length of w")
+    }else if(any(!names(out$d_obs) %in% names(out$w))){
+      stop("d_obs containes traits not in w")
+    }else{
+      out$d_obs <- out$d_obs[names(out$w)]
+    }
+    if(sum(out$d_obs) != 1){
+      message("sum(d_obs) != 1 -- rescaling d_obs")
+      out$d_obs <- out$d_obs/sum(out$d_obs)
+    }
+  }
+
   # calc index weights ---------------------------------------------------------
   out$b <- solve(R %*% (out$D %*% out$G %*% t(out$D)) %*% R) %*% R %*% out$D %*% out$G %*% out$w
 
@@ -151,12 +171,28 @@ SelInd <- function(
     warning("first derivative od d by w can only be calculated if selescion intensity (i) is supplied")
   }
 
+  # realized weights -----------------------------------------------------
+
+  if(!is.null(out$d_obs)){
+    if(any(dim(out$G) != dim(out$E))){
+      warning("m != n -- realized genetic cain cannot be calculated")
+    }else{
+      out$b_real <-  solve(out$G %*% t(out$D) %*% R) %*% out$d_obs
+      out$w_real <- solve(out$D %*% out$G) %*% (out$D %*% out$G %*% t(out$D) + out$E) %*% solve(out$G %*% t(out$D)) %*% out$d_obs
+    }
+  }else{
+    warning("No observed proportion of genetic progress given - cannot calculate realized weights")
+  }
+
+
   # return output --------------------------------------------------------------
   out$b <- out$b[,1]
   out$var_I <- out$var_I[1,1]
   if(!is.null(out$d)) out$d <- out$d[,1]
   if(!is.null(out$dG)) out$dG <- out$dG[1,1]
   if(!is.null(out$del_d)) out$del_d <- out$del_d[,1]
+  if(!is.null(out$b_real)) out$b_real <- out$b_real[,1]
+  if(!is.null(out$w_real)) out$w_real <- out$w_real[,1]
   return(out)
 }
 
