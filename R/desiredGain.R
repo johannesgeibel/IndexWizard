@@ -58,7 +58,10 @@ SelInd <- function(
   }else if(is.null(names(w))){
     stop("w is not named")
   }else{
-    out$w <- w
+    if(sum(abs(w)) != 1){
+      warning("sum(abs(w)) != 1 -- rescaling w")
+    }
+    out$w <- w/sum(abs(w))
   }
   ## derive trait names
   # if(is.null(traits)){
@@ -141,12 +144,12 @@ SelInd <- function(
 
   # check d_obs
   if(!is.null(out$d_obs)){
-    if(length(out$d_obs) != length(out$w)){
-      stop("length of d_obs does not equal length of w")
-    }else if(any(!names(out$d_obs) %in% names(out$w))){
-      stop("d_obs containes traits not in w")
+    if(length(out$d_obs) != length(out$r)){
+      stop("length of d_obs does not equal length of r")
+    }else if(any(!names(out$d_obs) %in% names(out$r))){
+      stop("d_obs containes traits not in r")
     }else{
-      out$d_obs <- out$d_obs[names(out$w)]
+      out$d_obs <- out$d_obs[names(out$r)]
     }
     if(sum(out$d_obs) != 1){
       message("sum(d_obs) != 1 -- rescaling d_obs")
@@ -156,6 +159,7 @@ SelInd <- function(
 
   # calc index weights ---------------------------------------------------------
   out$b <- solve(R %*% (out$D %*% out$G %*% t(out$D)) %*% R) %*% R %*% out$D %*% out$G %*% out$w
+  out$b_scaled <- sum(abs(out$b))
 
   # calc variance of index -----------------------------------------------------
   out$var_I <- t(out$b) %*% R %*% (out$D %*% out$G %*% t(out$D) + out$E) %*% R %*% out$b
@@ -203,7 +207,10 @@ SelInd <- function(
 
   if(!is.null(out$d_obs)){
     if(any(dim(out$G) != dim(out$E))){
-      warning("m != n -- realized genetic cain cannot be calculated")
+      warning("m != n --> subsetting w  and G to length m for calculation of realized weights")
+      tmp <- colnames(R)
+      out$b_real <-  solve(out$G[tmp,tmp] %*% t(out$D[,tmp]) %*% R) %*% out$d_obs
+      out$w_real <- solve(out$D[,tmp] %*% out$G[tmp,tmp]) %*% (out$D[,tmp] %*% out$G[tmp,tmp] %*% t(out$D[,tmp]) + out$E) %*% solve(out$G[tmp,tmp] %*% t(out$D[,tmp])) %*% out$d_obs
     }else{
       out$b_real <-  solve(out$G %*% t(out$D) %*% R) %*% out$d_obs
       out$w_real <- solve(out$D %*% out$G) %*% (out$D %*% out$G %*% t(out$D) + out$E) %*% solve(out$G %*% t(out$D)) %*% out$d_obs
@@ -211,7 +218,8 @@ SelInd <- function(
   }else{
     warning("No observed proportion of genetic progress given - cannot calculate realized weights")
   }
-
+  out$b_real <- out$b_real/sum(abs(out$b_real))
+  out$w_real <- out$w_real/sum(abs(out$w_real))
 
   # return output --------------------------------------------------------------
   out$b <- out$b[,1]
