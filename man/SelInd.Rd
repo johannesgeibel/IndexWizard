@@ -4,16 +4,16 @@
 \alias{SelInd}
 \title{Function to calculate selection index}
 \usage{
-SelInd(w, G, E = NULL, r = NULL, i = NULL, h2 = NULL, d_obs = NULL)
+SelInd(w, G, r, H = NULL, i = NULL, h2 = NULL, d_obs = NULL)
 }
 \arguments{
-\item{w}{Numeric vector of n economic weights. Traits present in G, but not part of the index need to be coded as 0. Required.}
+\item{w}{Numeric vector of n economic weights. Traits present in G, but not part of the index need to be coded as 0. If traits of G are missing, they will be added automatically with zero weight. Required.}
 
 \item{G}{Named n*n genetic variance- covariance matrix. Dimnames of G need to match E/r to ensure correct sorting.  Required.}
 
-\item{E}{Named m*m (m <= n) residual variance- covariance matrix. If only a numeric vector is supplied, residuals will be assumed to be uncorrelated.}
+\item{r}{Named numeric vector of reliabilites with length m. Required.}
 
-\item{r}{Named numeric vector of reliabilites with length m. If E != NULL, calculated from G and E.  Required if E not given.}
+\item{H}{Named m*m matrix of empiric correlations between estimated breeding values.}
 
 \item{i}{Selection intensity}
 

@@ -1,9 +1,9 @@
 #' Function to calculate selection index
 #'
-#' @param w Numeric vector of n economic weights. Traits present in G, but not part of the index need to be coded as 0. Required.
+#' @param w Numeric vector of n economic weights. Traits present in G, but not part of the index need to be coded as 0. If traits of G are missing, they will be added automatically with zero weight. Required.
 #' @param G Named n*n genetic variance- covariance matrix. Dimnames of G need to match E/r to ensure correct sorting.  Required.
-#' @param E Named m*m (m <= n) residual variance- covariance matrix. If only a numeric vector is supplied, residuals will be assumed to be uncorrelated.
-#' @param r Named numeric vector of reliabilites with length m. If E != NULL, calculated from G and E.  Required if E not given.
+#' @param r Named numeric vector of reliabilites with length m. Required.
+#' @param H Named m*m matrix of empiric correlations between estimated breeding values.
 #' @param i Selection intensity
 #' @param h2 named numeric vector of length n containing heritabilities for the traits
 #' @param d_real named numeric vector of length n containing the observed composition of the genetic gain scaled in genetic standard deviations. If sum(d_real) != 1, it will be rescaled.
@@ -30,8 +30,8 @@
 SelInd <- function(
     w,
     G,
-    E = NULL,
-    r = NULL,
+    r,
+    H = NULL,
     i = NULL,
     h2 = NULL,
     d_obs = NULL
@@ -40,7 +40,7 @@ SelInd <- function(
   out <- list(
     w = NULL,
     G = NULL,
-    E = E, # to be included
+    E = NULL,
     r = r,
     b = NULL,
     i = i,
@@ -78,42 +78,56 @@ SelInd <- function(
   ## G
   if(!exists("G", inherits = FALSE)){
     stop("No Genetic VCV matrix supplied")
-  }else if(any(dim(G) != c(length(w),length(w)))){
-    stop("dimensions of w and G do not match")
+  }else if(dim(G)[1] != dim(G)[2] || any(G[upper.tri(G)] != t(G)[upper.tri(G)])){
+    stop("G is not squared")
+  }else if(any(colnames(G) != rownames(G))){
+    stop("row- and colnames of G do not match")
+  }else if(dim(G)[1] < length(w)){
+    stop("more traits in w than in G")
   }else if(any(!names(w) %in% colnames(G))){
-    stop("Trait names of G and w do not match")
+    stop("Some trait names of w are not in G")
   }else{
+    if(any(!colnames(G) %in% names(w))){
+      warning("missing traits in w, adding them with zero weight")
+      temp <- rep(0,sum(!colnames(G) %in% names(w)))
+      names(temp) <- colnames(G)[!colnames(G) %in% names(w)]
+      w <- c(w,temp)
+      out$w <- w
+    }
     G <- G[names(w),names(w)]
     out$G <- G
   }
 
   ## E and r
-  if(is.null(out$E)){
-    if(is.null(out$r)){
-      stop("Neither environmental VCV matrix nor reliabilites supplied")
-    }else{
-      if(any(!names(out$r) %in% colnames(out$G))){
-        stop("r containes traits not in G")
-      }
-      # set up D
-      out$D <- matrix(0,length(out$r),ncol(out$G),dimnames = list(names(out$r),colnames(out$G)))
-      for(i in 1:length(r)){
-        out$D[names(out$r)[i],names(out$r)[i]] <- 1
-      }
-      # set up R
-      R <- diag(out$r)
-      dimnames(R) <- list(names(out$r), names(out$r))
-      #derive E from r and G
+  if(is.null(out$r)){
+    stop("No reliabilities supplied")
+  }else{
+    if(any(!names(out$r) %in% colnames(out$G))){
+      stop("r containes traits not in G")
+    }
+    # set up D
+    out$D <- matrix(0,length(out$r),ncol(out$G),dimnames = list(names(out$r),colnames(out$G)))
+    for(i in 1:length(r)){
+      out$D[names(out$r)[i],names(out$r)[i]] <- 1
+    }
+    # set up R
+    R <- diag(out$r)
+    dimnames(R) <- list(names(out$r), names(out$r))
+    #derive E from r and G
+    if(is.null(H)){
       g <- diag(out$D %*% out$G %*% t(out$D))
       out$E <- diag((1-r)/r*g)
       dimnames(out$E) <- list(names(r),names(r))
       warning("only reliabilities given\n --> setting up E based on r and G\n --> residual errors are assumed to be uncorrelated!")
+    }else{
+      # include check of H
+      out$H <- H[names(out$r),names(out$r)]
+      out$E <- solve(sqrt(R)) %*% H %*% solve(sqrt(R)) * G[1,1] # what if G's scaled differently?
+      out$E <- out$E - out$D %*% out$G %*% t(out$D)
     }
-  }else if(!is.null(E) & !is.null(r)){
-    # check whether E is diagonal
-    # check length of r
-    # calc difference between E and r
   }
+
+
   # check h2
   if(!is.null(out$h2)){
     if(length(out$h2) != length(out$w)){
@@ -166,9 +180,15 @@ SelInd <- function(
 
   # first derivative -----------------------------------------------------------
   if(!is.null(out$i)){
-    out$del_d <- (out$i / sqrt(out$var_I))[1,1] * out$G %*% t(out$D) %*% solve(out$D %*% out$G %*% t(out$D) + out$E) %*% out$D %*% out$G %*% w
+    out$del_d <- (out$i / sqrt(out$var_I))[1,1] * out$G %*% t(out$D) %*% solve(out$D %*% out$G %*% t(out$D) + out$E) %*% out$D %*% out$G
+    #out$del_d <- (out$i / sqrt(out$var_I))[1,1] * out$G %*% t(out$D) %*% solve(out$D %*% out$G %*% t(out$D) + out$E) %*% out$D %*% out$G %*% w
   }else{
-    warning("first derivative od d by w can only be calculated if selescion intensity (i) is supplied")
+    warning("first derivative of d by w can only be calculated if selescion intensity (i) is supplied; calculating only scaled version")
+  }
+  out$del_d_scaled <- out$G %*% t(out$D) %*% solve(out$D %*% out$G %*% t(out$D) + out$E) %*% out$D %*% out$G
+  for(i in 1:nrow(out$del_d_scaled)){
+    srow <- sum(abs(out$del_d_scaled[i,]))
+    out$del_d_scaled[i,] <- out$del_d_scaled[i,] / srow
   }
 
   # realized weights -----------------------------------------------------
@@ -190,7 +210,7 @@ SelInd <- function(
   out$var_I <- out$var_I[1,1]
   if(!is.null(out$d)) out$d <- out$d[,1]
   if(!is.null(out$dG)) out$dG <- out$dG[1,1]
-  if(!is.null(out$del_d)) out$del_d <- out$del_d[,1]
+  #if(!is.null(out$del_d)) out$del_d <- out$del_d[,1]
   if(!is.null(out$b_real)) out$b_real <- out$b_real[,1]
   if(!is.null(out$w_real)) out$w_real <- out$w_real[,1]
   return(out)
