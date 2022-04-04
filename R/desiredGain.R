@@ -167,10 +167,18 @@ SelInd <- function(
     if(!is.null(out$h2)){
       out$d_P <- out$d * sqrt(out$h2) / sqrt(g)
     }else{
-      warning("no heritybilities provided, cannot compute the expected phenotypic trend")
+      warning("no heritabilities provided, cannot compute the expected phenotypic trend")
     }
   }else{
-    warning("no selection intensity provided, cannot compute the expected genetic and phenotypic trend")
+    warning("no selection intensity provided, can only compute the relative genetic and phenotypic trend")
+  }
+  # relative trend
+  out$d_rel <- (out$G %*% t(out$D) %*% R %*% out$b)
+  out$d_rel <- out$d_rel/sum(abs(out$d_rel))
+  if(!is.null(out$h2)){
+    out$d_P <- out$d * sqrt(out$h2) / sqrt(g)
+  }else{
+    warning("no heritabilities provided, cannot compute the expected relative phenotypic trend")
   }
 
   # calc analytical measures ---------------------------------------------------
@@ -209,6 +217,7 @@ SelInd <- function(
   out$b <- out$b[,1]
   out$var_I <- out$var_I[1,1]
   if(!is.null(out$d)) out$d <- out$d[,1]
+  if(!is.null(out$d_rel)) out$d_rel <- out$d_rel[,1]
   if(!is.null(out$dG)) out$dG <- out$dG[1,1]
   #if(!is.null(out$del_d)) out$del_d <- out$del_d[,1]
   if(!is.null(out$b_real)) out$b_real <- out$b_real[,1]
