@@ -1,7 +1,7 @@
 Package: desiredGains
 Type: Package
 Title: What the Package Does (Title Case)
-Version: 0.1.0
+Version: 0.1.1
 Author: Who wrote it
 Maintainer: Johannes Geibel <johannes.geibel@uni-goettingen.de>
 Description: More about what it does (maybe more than one line)
