@@ -34,7 +34,7 @@ SelInd <- function(
     H = NULL,
     i = NULL,
     h2 = NULL,
-    d_obs = NULL
+    d_real = NULL
 ){
   # initialize central object --------------------------------------------------
   out <- list(
@@ -47,7 +47,7 @@ SelInd <- function(
     d = NULL,
     dG = NULL,
     h2 = h2,
-    d_obs = d_obs
+    d_real = d_real
   )
   class(out) <- "SelInd"
 
@@ -142,18 +142,18 @@ SelInd <- function(
     }
   }
 
-  # check d_obs
-  if(!is.null(out$d_obs)){
-    if(length(out$d_obs) != length(out$r)){
-      stop("length of d_obs does not equal length of r")
-    }else if(any(!names(out$d_obs) %in% names(out$r))){
-      stop("d_obs containes traits not in r")
+  # check d_real
+  if(!is.null(out$d_real)){
+    if(length(out$d_real) != length(out$r)){
+      stop("length of d_real does not equal length of r")
+    }else if(any(!names(out$d_real) %in% names(out$r))){
+      stop("d_real containes traits not in r")
     }else{
-      out$d_obs <- out$d_obs[names(out$r)]
+      out$d_real <- out$d_real[names(out$r)]
     }
-    if(sum(out$d_obs) != 1){
-      message("sum(d_obs) != 1 -- rescaling d_obs")
-      out$d_obs <- out$d_obs/sum(out$d_obs)
+    if(sum(out$d_real) != 1){
+      message("sum(d_real) != 1 -- rescaling d_real")
+      out$d_real <- out$d_real/sum(out$d_real)
     }
   }
 
@@ -205,21 +205,22 @@ SelInd <- function(
 
   # realized weights -----------------------------------------------------
 
-  if(!is.null(out$d_obs)){
+  if(!is.null(out$d_real)){
     if(any(dim(out$G) != dim(out$E))){
       warning("m != n --> subsetting w  and G to length m for calculation of realized weights")
       tmp <- colnames(R)
-      out$b_real <-  solve(out$G[tmp,tmp] %*% t(out$D[,tmp]) %*% R) %*% out$d_obs
-      out$w_real <- solve(out$D[,tmp] %*% out$G[tmp,tmp]) %*% (out$D[,tmp] %*% out$G[tmp,tmp] %*% t(out$D[,tmp]) + out$E) %*% solve(out$G[tmp,tmp] %*% t(out$D[,tmp])) %*% out$d_obs
+      out$b_real <-  solve(out$G[tmp,tmp] %*% t(out$D[,tmp]) %*% R) %*% out$d_real
+      out$w_real <- solve(out$D[,tmp] %*% out$G[tmp,tmp]) %*% (out$D[,tmp] %*% out$G[tmp,tmp] %*% t(out$D[,tmp]) + out$E) %*% solve(out$G[tmp,tmp] %*% t(out$D[,tmp])) %*% out$d_real
     }else{
-      out$b_real <-  solve(out$G %*% t(out$D) %*% R) %*% out$d_obs
-      out$w_real <- solve(out$D %*% out$G) %*% (out$D %*% out$G %*% t(out$D) + out$E) %*% solve(out$G %*% t(out$D)) %*% out$d_obs
+      out$b_real <-  solve(out$G %*% t(out$D) %*% R) %*% out$d_real
+      out$w_real <- solve(out$D %*% out$G) %*% (out$D %*% out$G %*% t(out$D) + out$E) %*% solve(out$G %*% t(out$D)) %*% out$d_real
     }
+    out$b_real <- out$b_real/sum(abs(out$b_real))
+    out$w_real <- out$w_real/sum(abs(out$w_real))
+
   }else{
     warning("No observed proportion of genetic progress given - cannot calculate realized weights")
   }
-  out$b_real <- out$b_real/sum(abs(out$b_real))
-  out$w_real <- out$w_real/sum(abs(out$w_real))
 
   # return output --------------------------------------------------------------
   out$b <- out$b[,1]

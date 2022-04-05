@@ -4,7 +4,7 @@
 \alias{SelInd}
 \title{Function to calculate selection index}
 \usage{
-SelInd(w, G, r, H = NULL, i = NULL, h2 = NULL, d_obs = NULL)
+SelInd(w, G, r, H = NULL, i = NULL, h2 = NULL, d_real = NULL)
 }
 \arguments{
 \item{w}{Numeric vector of n economic weights. Traits present in G, but not part of the index need to be coded as 0. If traits of G are missing, they will be added automatically with zero weight. Required.}
