@@ -1,7 +1,7 @@
 # print -----------------------------------------------------------------------
 #' Function to nicely print a SelInd object
 #'
-#' @param x
+#' @param x An object of class SelInd
 #'
 #' @return
 #' @export
@@ -12,9 +12,9 @@ print.SelInd <- function(x){
 }
 
 # summary ---------------------------------------------------------------------
-#' Function to summarize the content of a selInd object.
+#' Function to summarize the content of a SelInd object.
 #'
-#' @param object
+#' @param object An object of class SelInd
 #'
 #' @return
 #' @export
@@ -27,13 +27,14 @@ summary.SelInd <- function(object){
     "  -",sum(object$w!=0),"traits with economic weight != 0\n",
     "  -",length(object$r),"index traits\n")
 }
+
 # as.data.frame ----------------------------------------------------------------
 #' Function to coerce the results of a SelInd object to a data.frame for easy access.
 #'
 #' @param x An object of class SelInd
 #' @param long logical indicating, whether resulting data.frame shall be in long format.
 #'
-#' @return a data.frame with traits in rows and result vectors in columns. if long = TRUE, a data.frame in long format with two columns (variable and value)
+#' @return a data.frame with traits in rows and result vectors in columns. if long = TRUE, a data.frame in long format with three columns (variable, trait and value)
 #' @export
 #'
 #' @examples
@@ -45,6 +46,7 @@ as.data.frame.SelInd <- function(x, long = FALSE){
     for(i in 1:length(x)){
       out[[i]] <- data.frame(
         variable = colnames(x)[i],
+        trait = rownames(x),
         value = x[[i]]
       )
     }

@@ -2,16 +2,18 @@
 % Please edit documentation in R/methods.R
 \name{as.data.frame.SelInd}
 \alias{as.data.frame.SelInd}
-\title{Function to coerce the results of a SelInd object to a data.frame.}
+\title{Function to coerce the results of a SelInd object to a data.frame for easy access.}
 \usage{
-\method{as.data.frame}{SelInd}(x)
+\method{as.data.frame}{SelInd}(x, long = FALSE)
 }
 \arguments{
-\item{x}{}
+\item{x}{An object of class SelInd}
+
+\item{long}{logical indicating, whether resulting data.frame shall be in long format.}
 }
 \value{
-a data.frame with traits in rows and result vectors in columns
+a data.frame with traits in rows and result vectors in columns. if long = TRUE, a data.frame in long format with three columns (variable, trait and value)
 }
 \description{
-Function to coerce the results of a SelInd object to a data.frame.
+Function to coerce the results of a SelInd object to a data.frame for easy access.
 }

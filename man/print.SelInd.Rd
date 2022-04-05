@@ -7,7 +7,7 @@
 \method{print}{SelInd}(x)
 }
 \arguments{
-\item{x}{}
+\item{x}{An object of class SelInd}
 }
 \value{
 

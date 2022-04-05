@@ -2,16 +2,16 @@
 % Please edit documentation in R/methods.R
 \name{summary.SelInd}
 \alias{summary.SelInd}
-\title{Function to summarize the content of a selInd object.}
+\title{Function to summarize the content of a SelInd object.}
 \usage{
 \method{summary}{SelInd}(object)
 }
 \arguments{
-\item{object}{}
+\item{object}{An object of class SelInd}
 }
 \value{
 
 }
 \description{
-Function to summarize the content of a selInd object.
+Function to summarize the content of a SelInd object.
 }
