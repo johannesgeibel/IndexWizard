@@ -3,7 +3,7 @@
 #' @param w Numeric vector of n economic weights. Traits present in G, but not part of the index need to be coded as 0. If traits of G are missing, they will be added automatically with zero weight. Required.
 #' @param G Named n*n genetic variance- covariance matrix. Dimnames of G need to match E/r to ensure correct sorting.  Required.
 #' @param r Named numeric vector of reliabilites with length m. Required.
-#' @param H Named m*m matrix of empiric correlations between estimated breeding values.
+#' @param H Named m*m variance-covariance matrix of estimated breeding to internally derive the residual variance-covariance matrix.
 #' @param i Selection intensity
 #' @param h2 named numeric vector of length n containing heritabilities for the traits
 #' @param d_real named numeric vector of length n containing the observed composition of the genetic gain scaled in genetic standard deviations. If sum(d_real) != 1, it will be rescaled.
@@ -127,7 +127,7 @@ SelInd <- function(
     }else{
       # include check of H
       out$H <- H[names(out$r),names(out$r)]
-      out$E <- solve(sqrt(R)) %*% H %*% solve(sqrt(R)) * G[1,1] # what if G's scaled differently?
+      out$E <- solve(sqrt(R)) %*% H %*% solve(sqrt(R))
       out$E <- out$E - out$D %*% out$G %*% t(out$D)
     }
   }
