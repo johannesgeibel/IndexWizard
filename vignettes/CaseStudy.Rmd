@@ -1,0 +1,123 @@
+---
+title: "Case Study"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{CaseStudy}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Preface
+
+```{r setup}
+library(desiredGains)
+```
+
+# The data
+
+The case study handles the situation in German Holstein Friesian breeding where the general Index (RZG) is based on several traits. The composition of the index changed in 2021, so that there are now eight instead of 6 traits in the index. Also, the exact trait definition was changed. In total, there are 10 "breeding goal traits". See Simianer *et al.* (to be submitted) for more details on it.
+
+The economic weights (`w`) of the indices are as follows, with traits not in the index having zero weight.
+
+```{r}
+tn <- c("RZM", "RZN", "RZEo", "RZEn", "RZR", "RZKm", "RZKd", "RZH", "RZC", "RZS")
+
+w_old <- c(0.45, 0.2, 0.15, 0, 0.1, 0.03, 0, 0, 0, 0.07)
+names(w_old) <- tn; w_old
+
+w_new <- c(0.36, 0.18, 0, 0.15, 0.07, 0.015, 0.015, 0.18, 0.03, 0)
+names(w_new) <- tn; w_old
+
+```
+
+Breeding values are scaled to a mean of 100 index points and a additive genetic standard deviation of 12 index points. This makes it easy to set up the genetic variance-covariance matrix ( $\Gamma = G$ ) from the genetic correlation matrix.
+
+```{r}
+G <- matrix(
+  c(1.0,0.13,0.13,0.07,-0.15,0.11,0.07,0.09,-0.02,0.04,
+    0.13,1.0,0.23,0.28,0.43,0.25,0.22,0.78,0.13,0.46,
+    0.13,0.23,1.0,0.92,0.02,0.09,-0.05,0.25,-0.1,0.19,
+    0.07,0.28,0.92,1.0,0.06,0.08,-.03,0.31,-.1,0.25,
+    -0.15,0.43,.02,0.06,1.0,0.32,0.19,0.41,0.04,0.15,
+    0.11,0.25,0.09,0.08,0.32,1.0,0.0,0.25,0.04,0.13,
+    0.07,0.22,-.05,-.03,0.19,0,1.0,0.23,0.05,0.10,
+    0.09,0.78,0.25,0.31,0.41,0.25,0.23,1.0,0.1,0.57,
+    -.02,0.13,-.10,-.1,0.04,0.04,0.05,0.1,1.0,0.02,
+    0.04,0.46,0.19,0.25,0.15,0.13,0.10,0.57,0.02,1.0)
+  ,byrow = TRUE, nrow = length(tn), ncol = length(tn), dimnames = list(tn, tn)
+)
+G <- G*144
+G
+```
+
+In our case, reliabilities ($r^2_{AI}$) of the estimated breeding values are available for all traits.
+
+```{r}
+r <- c(0.743, 0.673, 0.638, 0.717, 0.541, 0.635, 0.604, 0.720, 0.499, 0.764)
+names(r) <- tn; r
+
+```
+
+If we regard the actual situations, when breeding value estimation is only performed for the actual index traits, $r$ needs to be subsetted.
+
+```{r}
+r_old <- r[w_old != 0]
+r_new <- r[w_new != 0]
+```
+
+For the case of the old index, estimates of the realized genetic gains of the traits in the index are available.
+
+```{r}
+deltautr <- c(0.28401392, 0.21637703, 0.17932963, 0.09986764, 0.08767239, 0.13273939)
+names(deltautr) <- tn[w_old>0]
+
+```
+
+Further ...
+
+```{r}
+
+H <- matrix (c(1.00,0.06,0.06,-.20,0.05,0.03,
+               0.06,1.00,0.14,0.40,0.20,0.46,
+               0.06,0.14,1.00,-.03,0.03,0.15,
+               -.20,0.40,-.03,1.00,0.30,0.13,
+               0.05,0.20,0.03,0.30,1.00,0.11,
+               0.03,0.46,0.15,0.13,0.11,1.00), nrow=6, ncol=6,
+             dimnames = list(tn[w_old>0],tn[w_old>0]))
+```
+
+# Usage of the function
+
+```{r}
+res <- SelInd(
+  w = w_old,
+  G = G,
+  r = r_old
+)
+
+```
+
+```{r}
+summary(res)
+```
+
+```{r}
+res
+```
+
+# Case studies
+
+## Changes in expected gain
+
+```{r}
+res_old <- SelInd(w = w_old, G = G,  r = r_old)
+res_new <- SelInd(w = w_new, G = G,  r = r_new)
+
+```
