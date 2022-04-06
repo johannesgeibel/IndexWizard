@@ -80,7 +80,14 @@ names(deltautr) <- tn[w_old>0]
 
 ```
 
-Further ...
+We may further need heritabilities of the traits to translate genetic gain into phenotypic gain.
+
+```{r}
+h2 <- c(0.314, 0.090, 0.194, 0.194, 0.013, 0.049, 0.033, 0.061, 0.014, 0.273)
+names(h2) <- tn
+```
+
+Further, to allow residual errors to be correlated, we need a variance-covariance matrix of breeding values ($H$) as starting point for the internal estimation process.
 
 ```{r}
 
@@ -93,6 +100,7 @@ H <- matrix (
     0.03,0.46,0.15,0.13,0.11,1.00),
   nrow=6, ncol=6,
   dimnames = list(tn[w_old != 0], tn[w_old != 0]))
+H <- H * 144
 H
 ```
 
@@ -117,10 +125,61 @@ res
 
 # Case studies
 
+## Index weights
+
+```{r}
+res_old <- SelInd(w = w_old, G = G,  r = r_old, verbose = FALSE)
+res_new <- SelInd(w = w_new, G = G,  r = r_new, verbose = FALSE)
+```
+
+```{r}
+round(res_old$b,2)
+round(res_new$b,2)
+```
+
+```{r}
+
+ind <- c(RZM = 130, RZN = 110, RZEo = 105, RZEn = 106, RZR = 95,
+         RZKm = 100, RZKd = 101, RZH = 115,  RZC = 90,  RZS = 120)
+```
+
+```{r}
+t(res_old$b_scaled) %*% ind[names(res_old$b_scaled)]
+```
+
+The same individual would have a slightly lower RZG given the new index.
+
+```{r}
+t(res_new$b_scaled) %*% ind[names(res_new$b_scaled)]
+```
+
+## Expected composition of gain
+
 ## Changes in expected gain
 
 ```{r}
-res_old <- SelInd(w = w_old, G = G,  r = r_old)
-res_new <- SelInd(w = w_new, G = G,  r = r_new)
+res_old <- SelInd(w = w_old, G = G,  r = r_old, h2 = h2)
+res_new <- SelInd(w = w_new, G = G,  r = r_new, h2 = h2)
 
 ```
+
+```{r}
+round(res_new$w - res_old$w,2)
+```
+
+```{r}
+round(res_new$d_rel_G - res_old$d_rel_G,2)
+```
+
+```{r}
+round(res_new$d_rel_P - res_old$d_rel_P,2)
+```
+
+```{r}
+round(h2,2)
+round(res_old$d_rel_P - res_old$d_rel_G,2)
+round(res_new$d_rel_P - res_new$d_rel_G,2)
+
+```
+
+## Realized gain
