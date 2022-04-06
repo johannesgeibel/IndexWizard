@@ -45,8 +45,11 @@ SelInd <- function(
     E = NULL,
     r = r,
     b = NULL,
+    b_scaled = NULL,
     i = i,
     d = NULL,
+    d_rel_G = NULL,
+    d_rel_P = NULL,
     dG = NULL,
     h2 = h2,
     d_real = d_real
@@ -161,7 +164,7 @@ SelInd <- function(
 
   # calc index weights ---------------------------------------------------------
   out$b <- solve(R %*% (out$D %*% out$G %*% t(out$D)) %*% R) %*% R %*% out$D %*% out$G %*% out$w
-  out$b_scaled <- sum(abs(out$b))
+  out$b_scaled <- out$b / sum(abs(out$b))
 
   # calc variance of index -----------------------------------------------------
   out$var_I <- t(out$b) %*% R %*% (out$D %*% out$G %*% t(out$D) + out$E) %*% R %*% out$b
@@ -179,10 +182,14 @@ SelInd <- function(
     if(verbose) message("- no selection intensity provided\n  --> can only compute the relative genetic and phenotypic trend")
   }
   # relative trend
-  out$d_rel <- (out$G %*% t(out$D) %*% R %*% out$b)
-  out$d_rel <- out$d_rel/sum(abs(out$d_rel))
+  out$d_rel_G <- (out$G %*% t(out$D) %*% R %*% out$b)
+  out$d_rel_G <- out$d_rel_G/sum(abs(out$d_rel_G))
   if(!is.null(out$h2)){
-    out$d_P <- out$d * sqrt(out$h2) / sqrt(g)
+    if(!is.null(out$d)){
+      out$d_P <- out$d * sqrt(out$h2) / sqrt(diag(G))
+    }
+    out$d_rel_P <- out$d_rel_G * sqrt(out$h2) / sqrt(diag(G))
+    out$d_rel_P <- out$d_rel_P/sum(abs(out$d_rel_P))
   }else{
     if(verbose) message("- no heritabilities provided\n  --> cannot compute the expected relative phenotypic trend")
   }
@@ -227,8 +234,10 @@ SelInd <- function(
   # return output --------------------------------------------------------------
   out$b <- out$b[,1]
   out$var_I <- out$var_I[1,1]
+  if(!is.null(out$b_scaled)) out$b_scaled <- out$b_scaled[,1]
   if(!is.null(out$d)) out$d <- out$d[,1]
-  if(!is.null(out$d_rel)) out$d_rel <- out$d_rel[,1]
+  if(!is.null(out$d_rel_G)) out$d_rel_G <- out$d_rel_G[,1]
+  if(!is.null(out$d_rel_P)) out$d_rel_P <- out$d_rel_P[,1]
   if(!is.null(out$dG)) out$dG <- out$dG[1,1]
   #if(!is.null(out$del_d)) out$del_d <- out$del_d[,1]
   if(!is.null(out$b_real)) out$b_real <- out$b_real[,1]

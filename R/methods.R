@@ -35,6 +35,11 @@ summary.SelInd <- function(object){
   }
   cat("\nResidual errors were assumed to be ",check,".\n", sep = "")
   # print non-calculated objects
+  obj_in <- paste(names(object)[!sapply(object,is.null)], collapse = ", ")
+  obj_out <- paste(names(object)[sapply(object,is.null)], collapse = ", ")
+  cat("\nThe SelInd object contains the entries ",obj_in,".\n", sep = "")
+  cat("The SelInd object does not contain the entries ",obj_out,".\n", sep = "")
+
 }
 
 # as.data.frame ----------------------------------------------------------------
