@@ -7,6 +7,7 @@
 #' @param i Selection intensity
 #' @param h2 named numeric vector of length n containing heritabilities for the traits
 #' @param d_real named numeric vector of length n containing the observed composition of the genetic gain scaled in genetic standard deviations. If sum(d_real) != 1, it will be rescaled.
+#' @param verbose Shall information be printed?
 #'
 #' @details The framework allows to have less traits in the selection index than in the breeding goal (m < n). Calculation of realized economic weights, however, requires m == n.
 #'
@@ -34,7 +35,8 @@ SelInd <- function(
     H = NULL,
     i = NULL,
     h2 = NULL,
-    d_real = NULL
+    d_real = NULL,
+    verbose = TRUE
 ){
   # initialize central object --------------------------------------------------
   out <- list(
@@ -59,7 +61,7 @@ SelInd <- function(
     stop("w is not named")
   }else{
     if(sum(abs(w)) != 1){
-      warning("sum(abs(w)) != 1 -- rescaling w")
+      if(verbose) message("- sum(abs(w)) != 1\n  --> rescaling w")
     }
     out$w <- w/sum(abs(w))
   }
@@ -91,7 +93,7 @@ SelInd <- function(
     stop("Some trait names of w are not in G")
   }else{
     if(any(!colnames(G) %in% names(w))){
-      warning("missing traits in w, adding them with zero weight")
+      if(verbose) message("- missing traits in w\n  --> adding them with zero weight")
       temp <- rep(0,sum(!colnames(G) %in% names(w)))
       names(temp) <- colnames(G)[!colnames(G) %in% names(w)]
       w <- c(w,temp)
@@ -121,7 +123,7 @@ SelInd <- function(
       g <- diag(out$D %*% out$G %*% t(out$D))
       out$E <- diag((1-r)/r*g)
       dimnames(out$E) <- list(names(r),names(r))
-      warning("only reliabilities given\n --> setting up E based on r and G\n --> residual errors are assumed to be uncorrelated!")
+      if(verbose) message("- only reliabilities given\n  --> setting up E based on r and G\n  --> residual errors are assumed to be uncorrelated!")
     }else{
       # include check of H
       out$H <- H[names(out$r),names(out$r)]
@@ -152,7 +154,7 @@ SelInd <- function(
       out$d_real <- out$d_real[names(out$r)]
     }
     if(sum(out$d_real) != 1){
-      message("sum(d_real) != 1 -- rescaling d_real")
+      if(verbose) message("- sum(d_real) != 1 -- rescaling d_real")
       out$d_real <- out$d_real/sum(out$d_real)
     }
   }
@@ -171,10 +173,10 @@ SelInd <- function(
     if(!is.null(out$h2)){
       out$d_P <- out$d * sqrt(out$h2) / sqrt(g)
     }else{
-      warning("no heritabilities provided, cannot compute the expected phenotypic trend")
+      if(verbose) message("- no heritabilities provided\n  --> cannot compute the expected phenotypic trend")
     }
   }else{
-    warning("no selection intensity provided, can only compute the relative genetic and phenotypic trend")
+    if(verbose) message("- no selection intensity provided\n  --> can only compute the relative genetic and phenotypic trend")
   }
   # relative trend
   out$d_rel <- (out$G %*% t(out$D) %*% R %*% out$b)
@@ -182,7 +184,7 @@ SelInd <- function(
   if(!is.null(out$h2)){
     out$d_P <- out$d * sqrt(out$h2) / sqrt(g)
   }else{
-    warning("no heritabilities provided, cannot compute the expected relative phenotypic trend")
+    if(verbose) message("- no heritabilities provided\n  --> cannot compute the expected relative phenotypic trend")
   }
 
   # calc analytical measures ---------------------------------------------------
@@ -195,7 +197,7 @@ SelInd <- function(
     out$del_d <- (out$i / sqrt(out$var_I))[1,1] * out$G %*% t(out$D) %*% solve(out$D %*% out$G %*% t(out$D) + out$E) %*% out$D %*% out$G
     #out$del_d <- (out$i / sqrt(out$var_I))[1,1] * out$G %*% t(out$D) %*% solve(out$D %*% out$G %*% t(out$D) + out$E) %*% out$D %*% out$G %*% w
   }else{
-    warning("first derivative of d by w can only be calculated if selescion intensity (i) is supplied; calculating only scaled version")
+    if(verbose) message("- first derivative of d by w can only be calculated if selescion intensity (i) is supplied\n  --> calculating only scaled version")
   }
   out$del_d_scaled <- out$G %*% t(out$D) %*% solve(out$D %*% out$G %*% t(out$D) + out$E) %*% out$D %*% out$G
   for(i in 1:nrow(out$del_d_scaled)){
@@ -207,7 +209,7 @@ SelInd <- function(
 
   if(!is.null(out$d_real)){
     if(any(dim(out$G) != dim(out$E))){
-      warning("m != n --> subsetting w  and G to length m for calculation of realized weights")
+      if(verbose) message("- m != n\n  --> subsetting w  and G to length m for calculation of realized weights")
       tmp <- colnames(R)
       out$b_real <-  solve(out$G[tmp,tmp] %*% t(out$D[,tmp]) %*% R) %*% out$d_real
       out$w_real <- solve(out$D[,tmp] %*% out$G[tmp,tmp]) %*% (out$D[,tmp] %*% out$G[tmp,tmp] %*% t(out$D[,tmp]) + out$E) %*% solve(out$G[tmp,tmp] %*% t(out$D[,tmp])) %*% out$d_real
@@ -219,7 +221,7 @@ SelInd <- function(
     out$w_real <- out$w_real/sum(abs(out$w_real))
 
   }else{
-    warning("No observed proportion of genetic progress given - cannot calculate realized weights")
+    if(verbose) message("- No observed proportion of genetic progress given\n  --> cannot calculate realized weights")
   }
 
   # return output --------------------------------------------------------------

@@ -22,10 +22,19 @@ print.SelInd <- function(x){
 #' @examples
 summary.SelInd <- function(object){
   cat(
-    "an object of class SelInd. The index is based on:\n",
-    "  -",length(object$w),"breeding goal traits\n",
+    "An object of class SelInd. The index is based on:\n",
+    "  - n =",length(object$w),"breeding goal traits\n",
     "  -",sum(object$w!=0),"traits with economic weight != 0\n",
-    "  -",length(object$r),"index traits\n")
+    "  - m =",length(object$r),"index traits\n")
+  # check whether E is uncorrelated
+  check <- any(object$E[upper.tri(object$E)] != 0)
+  if(check){
+    check <- "correlated"
+  }else{
+    check <- "uncorrelated"
+  }
+  cat("\nResidual errors were assumed to be ",check,".\n", sep = "")
+  # print non-calculated objects
 }
 
 # as.data.frame ----------------------------------------------------------------
