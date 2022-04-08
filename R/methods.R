@@ -23,7 +23,7 @@ print.SelInd <- function(x, ...){
 
   # print weights --------------------------------------------------------------
   cat("\n--------------------------------------------------------------------\n")
-  cat("\neconomic (w) and index weights (b); potentially rescaled (\"_scaled\")\nso that the sum of absolute values matches 1: \n")
+  cat("\nEconomic (w) and index weights (b). Potentially they are rescaled (`scaled`)\nso that sum(abs()) = 1. The weights might represent realized (`real`) weights\nbased on an observed composition of the genetic trend:\n")
   cat("\n$w:\n")
   print(round(x$w,2))
   cat("\n$b:\n")
@@ -42,6 +42,11 @@ print.SelInd <- function(x, ...){
   }
 
   # print compositions ---------------------------------------------------------
+  cat("\n--------------------------------------------------------------------\n")
+  cat("\nComposition (d) of genetic (G) / phenotypic (P) trend.\n")
+  cat("The composition might be observed (`obs`), expected (`exp`) or realized (`real`).\n")
+  cat("The composition might be scaled (`scaled`) so that sum(abs()) = 1:\n")
+
 
   # print analytic measures ----------------------------------------------------
   #print.default(x)

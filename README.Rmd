@@ -41,6 +41,6 @@ library(desiredGains)
 
 Read the vignette `CaseStudy` for a detailed introduction.
 
-```{r vignette}
+```{r vignette, eval=FALSE}
 vignette("CaseStudy", package = "desiredGains")
 ```

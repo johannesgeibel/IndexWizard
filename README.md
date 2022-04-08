@@ -32,5 +32,4 @@ Read the vignette `CaseStudy` for a detailed introduction.
 
 ``` r
 vignette("CaseStudy", package = "desiredGains")
-#> Warning: vignette 'CaseStudy' not found
 ```
