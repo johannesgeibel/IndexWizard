@@ -16,3 +16,5 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
+URL: https://github.com/johannesgeibel/desiredGains
+BugReports: https://github.com/johannesgeibel/desiredGains/issues
