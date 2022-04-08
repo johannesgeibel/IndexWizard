@@ -2,11 +2,11 @@
 #' Function to nicely print a SelInd object
 #'
 #' @param x An object of class SelInd
+#' @param ... does nothing, only for generic compatibility
 #'
 #' @export
 #'
-#' @examples
-print.SelInd <- function(x){
+print.SelInd <- function(x, ...){
   cat(
     "An object of class SelInd. The index is based on:\n",
     "  - n =",length(x$w),"breeding goal traits\n",
@@ -51,11 +51,11 @@ print.SelInd <- function(x){
 #' Function to summarize the content of a SelInd object.
 #'
 #' @param object An object of class SelInd
+#' @param ... does nothing, only for generic compatibility
 #'
 #' @export
 #'
-#' @examples
-summary.SelInd <- function(object){
+summary.SelInd <- function(object, ...){
   cat(
     "An object of class SelInd. The index is based on:\n",
     "  - n =",length(object$w),"breeding goal traits\n",
@@ -81,13 +81,15 @@ summary.SelInd <- function(object){
 #' Function to coerce the results of a SelInd object to a data.frame for easy access.
 #'
 #' @param x An object of class SelInd
+#' @param row.names does nothing, only for generic compatibility
+#' @param optional does nothing, only for generic compatibility
+#' @param ... does nothing, only for generic compatibility
 #' @param long logical indicating, whether resulting data.frame shall be in long format.
 #'
 #' @return a data.frame with traits in rows and result vectors in columns. if long = TRUE, a data.frame in long format with three columns (variable, trait and value)
 #' @export
 #'
-#' @examples
-as.data.frame.SelInd <- function(x, long = FALSE){
+as.data.frame.SelInd <- function(x, row.names, optional, ..., long = FALSE){
   x <- t(x$results)
   x <- as.data.frame(x)
   if(long){

@@ -4,10 +4,12 @@
 \alias{summary.SelInd}
 \title{Function to summarize the content of a SelInd object.}
 \usage{
-\method{summary}{SelInd}(object)
+\method{summary}{SelInd}(object, ...)
 }
 \arguments{
 \item{object}{An object of class SelInd}
+
+\item{...}{does nothing, only for generic compatibility}
 }
 \description{
 Function to summarize the content of a SelInd object.

@@ -4,10 +4,16 @@
 \alias{as.data.frame.SelInd}
 \title{Function to coerce the results of a SelInd object to a data.frame for easy access.}
 \usage{
-\method{as.data.frame}{SelInd}(x, long = FALSE)
+\method{as.data.frame}{SelInd}(x, row.names, optional, ..., long = FALSE)
 }
 \arguments{
 \item{x}{An object of class SelInd}
+
+\item{row.names}{does nothing, only for generic compatibility}
+
+\item{optional}{does nothing, only for generic compatibility}
+
+\item{...}{does nothing, only for generic compatibility}
 
 \item{long}{logical indicating, whether resulting data.frame shall be in long format.}
 }

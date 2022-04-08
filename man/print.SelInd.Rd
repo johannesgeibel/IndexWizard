@@ -4,10 +4,12 @@
 \alias{print.SelInd}
 \title{Function to nicely print a SelInd object}
 \usage{
-\method{print}{SelInd}(x)
+\method{print}{SelInd}(x, ...)
 }
 \arguments{
 \item{x}{An object of class SelInd}
+
+\item{...}{does nothing, only for generic compatibility}
 }
 \description{
 Function to nicely print a SelInd object
