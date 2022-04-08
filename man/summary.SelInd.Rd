@@ -9,9 +9,6 @@
 \arguments{
 \item{object}{An object of class SelInd}
 }
-\value{
-
-}
 \description{
 Function to summarize the content of a SelInd object.
 }

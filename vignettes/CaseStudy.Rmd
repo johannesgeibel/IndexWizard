@@ -1,6 +1,15 @@
 ---
 title: "Case Study"
-output: rmarkdown::html_vignette
+author:
+- Johannes Geibel^1,2^, Henner Simianer^1,2^
+- ^1^University of Goettingen, Department of Animal Sciences, Animal Breeding and Genetics Group
+- ^2^University of Goettingen, Center for Integrated Breeding Research
+- 'E-Mail\: johannes.geibel@uni-goettingen.de; hsimian@gwdg.de'
+
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    number_sections: true
 vignette: >
   %\VignetteIndexEntry{CaseStudy}
   %\VignetteEngine{knitr::rmarkdown}
@@ -14,9 +23,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Preface
-
-```{r setup}
+```{r setup, include = FALSE}
 library(desiredGains)
 ```
 
@@ -60,16 +67,16 @@ G
 In our case, reliabilities ($r^2_{AI}$) of the estimated breeding values are available for all traits.
 
 ```{r}
-r <- c(0.743, 0.673, 0.638, 0.717, 0.541, 0.635, 0.604, 0.720, 0.499, 0.764)
-names(r) <- tn; r
+r2 <- c(0.743, 0.673, 0.638, 0.717, 0.541, 0.635, 0.604, 0.720, 0.499, 0.764)
+names(r2) <- tn; r2
 
 ```
 
 If we regard the actual situations, when breeding value estimation is only performed for the actual index traits, $r$ needs to be subsetted.
 
 ```{r}
-r_old <- r[w_old != 0]
-r_new <- r[w_new != 0]
+r2_old <- r2[w_old != 0]
+r2_new <- r2[w_new != 0]
 ```
 
 For the case of the old index, estimates of the realized genetic gains of the traits in the index are available.
@@ -104,23 +111,46 @@ H <- H * 144
 H
 ```
 
-# Usage of the function
+# Usage of the package `desiredGains`
+
+```{r eval=FALSE, include=FALSE}
+library(desiredGains)
+```
+
+All index calcualations are performed within the function `SelInd()` . Minimum required input are `w`, `G` and `r2`. Note that all vectors and matrices need to be named to allow checks and sorting based on trait names.
 
 ```{r}
 res <- SelInd(
   w = w_old,
   G = G,
-  r = r_old
+  r2 = r2_old
 )
 
 ```
+
+The function by default informs the user, if certain calculations cannot be performed. This behavior can be silenced with setting `verbose = FALSE`.
+
+```{r}
+res <- SelInd(w = w_old,  G = G,  r2 = r2_old, verbose = FALSE)
+```
+
+The `summary()` function further gives information on the number of traits, and all available entries in the `SelInd` object.
 
 ```{r}
 summary(res)
 ```
 
+The `print()` function further re-formats the output to a more readable format, which includes rounding to two decimals.
+
 ```{r}
 res
+```
+
+Nevertheless, each entry can also be extracted by the `$` operator.
+
+```{r}
+res$w
+res$b_scaled
 ```
 
 # Case studies
@@ -128,8 +158,8 @@ res
 ## Index weights
 
 ```{r}
-res_old <- SelInd(w = w_old, G = G,  r = r_old, verbose = FALSE)
-res_new <- SelInd(w = w_new, G = G,  r = r_new, verbose = FALSE)
+res_old <- SelInd(w = w_old, G = G,  r2 = r2_old, verbose = FALSE)
+res_new <- SelInd(w = w_new, G = G,  r2 = r2_new, verbose = FALSE)
 ```
 
 ```{r}
@@ -158,8 +188,8 @@ t(res_new$b_scaled) %*% ind[names(res_new$b_scaled)]
 ## Changes in expected gain
 
 ```{r}
-res_old <- SelInd(w = w_old, G = G,  r = r_old, h2 = h2)
-res_new <- SelInd(w = w_new, G = G,  r = r_new, h2 = h2)
+res_old <- SelInd(w = w_old, G = G,  r2 = r2_old, h2 = h2)
+res_new <- SelInd(w = w_new, G = G,  r2 = r2_new, h2 = h2)
 
 ```
 

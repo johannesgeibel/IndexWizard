@@ -3,12 +3,48 @@
 #'
 #' @param x An object of class SelInd
 #'
-#' @return
 #' @export
 #'
 #' @examples
 print.SelInd <- function(x){
-  print.default(x)
+  cat(
+    "An object of class SelInd. The index is based on:\n",
+    "  - n =",length(x$w),"breeding goal traits\n",
+    "  -",sum(x$w!=0),"traits with economic weight != 0\n",
+    "  - m =",length(x$r2),"index traits\n")
+
+  # message missing print of matrizes ------------------------------------------
+  cat("\n--------------------------------------------------------------------\n")
+  mats <- c("G","E","H")
+  mats <- mats[!sapply(x[mats],is.null)]
+  cat("\nMatrices",paste0(mats,collapse = ", "),"present in SelInd object, but not printed to reduce complexity.\n")
+  cat("Extract them by the use of the `$` operator.\n")
+
+
+  # print weights --------------------------------------------------------------
+  cat("\n--------------------------------------------------------------------\n")
+  cat("\neconomic (w) and index weights (b); potentially rescaled (\"_scaled\")\nso that the sum of absolute values matches 1: \n")
+  cat("\n$w:\n")
+  print(round(x$w,2))
+  cat("\n$b:\n")
+  print(round(x$b,2))
+  cat("\n$b_scaled:\n")
+  print(round(x$b_scaled,2))
+
+  # print r2 and h2 ------------------------------------------------------------
+  cat("\n--------------------------------------------------------------------\n")
+  cat("\nreliabilities (r2) and heritabilities (h2) of the traits:\n")
+  cat("\n$r2:\n")
+  print(round(x$r2,2))
+  if(!is.null(x$h2)){
+    cat("\n$h2:\n")
+    print(round(x$h2,2))
+  }
+
+  # print compositions ---------------------------------------------------------
+
+  # print analytic measures ----------------------------------------------------
+  #print.default(x)
 }
 
 # summary ---------------------------------------------------------------------
@@ -16,7 +52,6 @@ print.SelInd <- function(x){
 #'
 #' @param object An object of class SelInd
 #'
-#' @return
 #' @export
 #'
 #' @examples
@@ -25,7 +60,7 @@ summary.SelInd <- function(object){
     "An object of class SelInd. The index is based on:\n",
     "  - n =",length(object$w),"breeding goal traits\n",
     "  -",sum(object$w!=0),"traits with economic weight != 0\n",
-    "  - m =",length(object$r),"index traits\n")
+    "  - m =",length(object$r2),"index traits\n")
   # check whether E is uncorrelated
   check <- any(object$E[upper.tri(object$E)] != 0)
   if(check){

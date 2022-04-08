@@ -1,9 +1,9 @@
 #' Function to calculate selection index
 #'
 #' @param w Numeric vector of n economic weights. Traits present in G, but not part of the index need to be coded as 0. If traits of G are missing, they will be added automatically with zero weight. Required.
-#' @param G Named n*n genetic variance- covariance matrix. Dimnames of G need to match E/r to ensure correct sorting.  Required.
-#' @param r Named numeric vector of reliabilites with length m. Required.
-#' @param H Named m*m variance-covariance matrix of estimated breeding to internally derive the residual variance-covariance matrix.
+#' @param G Named n*n genetic variance- covariance matrix. Dimnames of G need to match w to ensure correct sorting.  Required.
+#' @param r2 Named numeric vector of reliabilites with length m. Required.
+#' @param H Named m*m variance-covariance matrix of estimated breeding to internally derive the residual variance-covariance matrix. If H contains more traits than r2, it will be subsetted.
 #' @param i Selection intensity
 #' @param h2 named numeric vector of length n containing heritabilities for the traits
 #' @param d_real named numeric vector of length n containing the observed composition of the genetic gain scaled in genetic standard deviations. If sum(d_real) != 1, it will be rescaled.
@@ -23,7 +23,7 @@
 #'              0,0,1,0.5,
 #'              0,0,0.5,1),4,4,
 #'            dimnames = list(c('A','C','B','D'),c('A','C','B','D'))),
-#' r = c(D=0.2,A=0.7),
+#' r2 = c(D=0.2,A=0.7),
 #' i = 0.02,
 #' h2 = c(A=0.2,B=0.2,C=0.2,D=0.3)
 #' )
@@ -31,7 +31,7 @@
 SelInd <- function(
     w,
     G,
-    r,
+    r2,
     H = NULL,
     i = NULL,
     h2 = NULL,
@@ -43,7 +43,7 @@ SelInd <- function(
     w = NULL,
     G = NULL,
     E = NULL,
-    r = r,
+    r2 = r2,
     b = NULL,
     b_scaled = NULL,
     i = i,
@@ -57,7 +57,7 @@ SelInd <- function(
   class(out) <- "SelInd"
 
   # check input ----------------------------------------------------------------
-  ## w
+  ## w -------------------------------------------------------------------------
   if(!exists("w", inherits = FALSE)){
     stop("No economic weights (w) supplied")
   }else if(is.null(names(w))){
@@ -68,22 +68,8 @@ SelInd <- function(
     }
     out$w <- w/sum(abs(w))
   }
-  ## derive trait names
-  # if(is.null(traits)){
-  #   if(!is.null(names(w))){
-  #     traits <- names(w)
-  #   }else{
-  #     traits <- paste0("trait_",1:length(w))
-  #     warning("no trait names specified - numbering them automatically")
-  #   }
-  # }else{
-  #   if(length(traits) == length(w)){
-  #     names(w) <- traits
-  #   }else{
-  #     stop("Length of w and traits differ")
-  #   }
-  # }
-  ## G
+
+  ## G -------------------------------------------------------------------------
   if(!exists("G", inherits = FALSE)){
     stop("No Genetic VCV matrix supplied")
   }else if(dim(G)[1] != dim(G)[2] || any(G[upper.tri(G)] != t(G)[upper.tri(G)])){
@@ -106,37 +92,47 @@ SelInd <- function(
     out$G <- G
   }
 
-  ## E and r
-  if(is.null(out$r)){
+  ## r2 and H -------------------------------------------------------------------
+  if(is.null(out$r2)){
     stop("No reliabilities supplied")
   }else{
-    if(any(!names(out$r) %in% colnames(out$G))){
-      stop("r containes traits not in G")
+    if(any(!names(out$r2) %in% colnames(out$G))){
+      stop("r2 containes traits not in G")
     }
     # set up D
-    out$D <- matrix(0,length(out$r),ncol(out$G),dimnames = list(names(out$r),colnames(out$G)))
-    for(i in 1:length(r)){
-      out$D[names(out$r)[i],names(out$r)[i]] <- 1
+    out$D <- matrix(0,length(out$r2),ncol(out$G),dimnames = list(names(out$r2),colnames(out$G)))
+    for(i in 1:length(r2)){
+      out$D[names(out$r2)[i],names(out$r2)[i]] <- 1
     }
     # set up R
-    R <- diag(out$r)
-    dimnames(R) <- list(names(out$r), names(out$r))
-    #derive E from r and G
+    R <- diag(out$r2)
+    dimnames(R) <- list(names(out$r2), names(out$r2))
+    #derive E from r2 and G
     if(is.null(H)){
       g <- diag(out$D %*% out$G %*% t(out$D))
-      out$E <- diag((1-r)/r*g)
-      dimnames(out$E) <- list(names(r),names(r))
-      if(verbose) message("- only reliabilities given\n  --> setting up E based on r and G\n  --> residual errors are assumed to be uncorrelated!")
+      out$E <- diag((1-r2)/r2*g)
+      dimnames(out$E) <- list(names(r2),names(r2))
+      if(verbose) message("- only reliabilities given\n  --> setting up E based on r2 and G\n  --> residual errors are assumed to be uncorrelated!")
     }else{
       # include check of H
-      out$H <- H[names(out$r),names(out$r)]
+      if(dim(H)[1] != dim(H)[2] || any(H[upper.tri(H)] != t(H)[upper.tri(H)])){
+        stop("H is not squared")
+      }else if(any(colnames(H) != rownames(H))){
+        stop("row- and colnames of H do not match")
+      }else if(dim(H)[1] < length(r2)){
+        stop("more traits in r2 than in H")
+      }else if(any(!names(r2) %in% colnames(H))){
+        stop("Some trait names of r2 are not in H")
+      }
+      if(verbose) message("- H is given\n  --> setting up E based on r2, G and H\n  --> residual errors are assumed to be correlated!")
+      out$H <- H[names(out$r2),names(out$r2)]
       out$E <- solve(sqrt(R)) %*% H %*% solve(sqrt(R))
       out$E <- out$E - out$D %*% out$G %*% t(out$D)
     }
   }
 
 
-  # check h2
+  ## check h2 ------------------------------------------------------------------
   if(!is.null(out$h2)){
     if(length(out$h2) != length(out$w)){
       stop("length of h2 does not equal length of w")
@@ -147,14 +143,14 @@ SelInd <- function(
     }
   }
 
-  # check d_real
+  ## check d_real --------------------------------------------------------------
   if(!is.null(out$d_real)){
-    if(length(out$d_real) != length(out$r)){
-      stop("length of d_real does not equal length of r")
-    }else if(any(!names(out$d_real) %in% names(out$r))){
-      stop("d_real containes traits not in r")
+    if(length(out$d_real) != length(out$r2)){
+      stop("length of d_real does not equal length of r2")
+    }else if(any(!names(out$d_real) %in% names(out$r2))){
+      stop("d_real containes traits not in r2")
     }else{
-      out$d_real <- out$d_real[names(out$r)]
+      out$d_real <- out$d_real[names(out$r2)]
     }
     if(sum(out$d_real) != 1){
       if(verbose) message("- sum(d_real) != 1 -- rescaling d_real")
@@ -181,7 +177,7 @@ SelInd <- function(
   }else{
     if(verbose) message("- no selection intensity provided\n  --> can only compute the relative genetic and phenotypic trend")
   }
-  # relative trend
+  # relative trend -------------------------------------------------------------
   out$d_rel_G <- (out$G %*% t(out$D) %*% R %*% out$b)
   out$d_rel_G <- out$d_rel_G/sum(abs(out$d_rel_G))
   if(!is.null(out$h2)){

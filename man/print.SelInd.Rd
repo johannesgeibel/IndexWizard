@@ -9,9 +9,6 @@
 \arguments{
 \item{x}{An object of class SelInd}
 }
-\value{
-
-}
 \description{
 Function to nicely print a SelInd object
 }
