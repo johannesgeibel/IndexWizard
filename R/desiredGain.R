@@ -6,7 +6,7 @@
 #' @param H Named m*m variance-covariance matrix of estimated breeding to internally derive the residual variance-covariance matrix. If H contains more traits than r2, it will be subsetted.
 #' @param i Selection intensity
 #' @param h2 named numeric vector of length n containing heritabilities for the traits
-#' @param d_real named numeric vector of length n containing the observed composition of the genetic gain scaled in genetic standard deviations. If sum(d_real) != 1, it will be rescaled.
+#' @param d_G_obs named numeric vector of length n containing the observed composition of the genetic gain scaled in genetic standard deviations. If sum(d_G_obs) != 1, it will be rescaled.
 #' @param verbose Shall information be printed?
 #'
 #' @details The framework allows to have less traits in the selection index than in the breeding goal (m < n). Calculation of realized economic weights, however, requires m == n.
@@ -35,7 +35,7 @@ SelInd <- function(
     H = NULL,
     i = NULL,
     h2 = NULL,
-    d_real = NULL,
+    d_G_obs = NULL,
     verbose = TRUE
 ){
   # initialize central object --------------------------------------------------
@@ -43,16 +43,26 @@ SelInd <- function(
     w = NULL,
     G = NULL,
     E = NULL,
+    H = H,
     r2 = r2,
+    h2 = h2,
     b = NULL,
     b_scaled = NULL,
+    w_real = NULL,
+    b_real = NULL,
+    var_I = NULL,
     i = i,
-    d = NULL,
-    d_rel_G = NULL,
-    d_rel_P = NULL,
+    d_G_obs = d_G_obs,
+    d_G_exp = NULL,
+    d_P_exp = NULL,
+    d_G_exp_scaled = NULL,
+    d_P_exp_scaled = NULL,
     dG = NULL,
-    h2 = h2,
-    d_real = d_real
+    r_IP = NULL,
+    r_IH = NULL,
+    del_d = NULL,
+    del_d_scaled = NULL,
+    D = NULL # not printed
   )
   class(out) <- "SelInd"
 
@@ -143,18 +153,18 @@ SelInd <- function(
     }
   }
 
-  ## check d_real --------------------------------------------------------------
-  if(!is.null(out$d_real)){
-    if(length(out$d_real) != length(out$r2)){
-      stop("length of d_real does not equal length of r2")
-    }else if(any(!names(out$d_real) %in% names(out$r2))){
-      stop("d_real containes traits not in r2")
+  ## check d_G_obs --------------------------------------------------------------
+  if(!is.null(out$d_G_obs)){
+    if(length(out$d_G_obs) != length(out$r2)){
+      stop("length of d_G_obs does not equal length of r2")
+    }else if(any(!names(out$d_G_obs) %in% names(out$r2))){
+      stop("d_G_obs containes traits not in r2")
     }else{
-      out$d_real <- out$d_real[names(out$r2)]
+      out$d_G_obs <- out$d_G_obs[names(out$r2)]
     }
-    if(sum(out$d_real) != 1){
-      if(verbose) message("- sum(d_real) != 1 -- rescaling d_real")
-      out$d_real <- out$d_real/sum(out$d_real)
+    if(sum(out$d_G_obs) != 1){
+      if(verbose) message("- sum(d_G_obs) != 1 -- rescaling d_G_obs")
+      out$d_G_obs <- out$d_G_obs/sum(out$d_G_obs)
     }
   }
 
@@ -167,10 +177,10 @@ SelInd <- function(
 
   # calc expected composition of genetic and phenotypic trend ---------------------------------
   if(!is.null(out$i)){
-    out$d <- (out$i / sqrt(out$var_I)[1,1] ) * (out$G %*% t(out$D) %*% R %*% out$b)
-    out$dG <- t(out$d) %*% out$w
+    out$d_G_exp <- (out$i / sqrt(out$var_I)[1,1] ) * (out$G %*% t(out$D) %*% R %*% out$b)
+    out$dG <- t(out$d_G_exp) %*% out$w
     if(!is.null(out$h2)){
-      out$d_P <- out$d * sqrt(out$h2) / sqrt(g)
+      out$d_P_exp <- out$d_G_exp * sqrt(out$h2[names(out$d_G_exp)]) / sqrt(diag(G[names(out$d_G_exp),names(out$d_G_exp)]))
     }else{
       if(verbose) message("- no heritabilities provided\n  --> cannot compute the expected phenotypic trend")
     }
@@ -178,14 +188,14 @@ SelInd <- function(
     if(verbose) message("- no selection intensity provided\n  --> can only compute the relative genetic and phenotypic trend")
   }
   # relative trend -------------------------------------------------------------
-  out$d_rel_G <- (out$G %*% t(out$D) %*% R %*% out$b)
-  out$d_rel_G <- out$d_rel_G/sum(abs(out$d_rel_G))
+  out$d_G_exp_scaled <- (out$G %*% t(out$D) %*% R %*% out$b)
+  out$d_G_exp_scaled <- out$d_G_exp_scaled/sum(abs(out$d_G_exp_scaled))
   if(!is.null(out$h2)){
-    if(!is.null(out$d)){
-      out$d_P <- out$d * sqrt(out$h2) / sqrt(diag(G))
-    }
-    out$d_rel_P <- out$d_rel_G * sqrt(out$h2) / sqrt(diag(G))
-    out$d_rel_P <- out$d_rel_P/sum(abs(out$d_rel_P))
+    # if(!is.null(out$d_G_exp)){
+    #   out$d_P_exp <- out$d_G_exp * sqrt(out$h2) / sqrt(diag(G))
+    # }
+    out$d_P_exp_scaled <- out$d_G_exp_scaled * sqrt(out$h2) / sqrt(diag(G))
+    out$d_P_exp_scaled <- out$d_P_exp_scaled/sum(abs(out$d_P_exp_scaled))
   }else{
     if(verbose) message("- no heritabilities provided\n  --> cannot compute the expected relative phenotypic trend")
   }
@@ -200,7 +210,7 @@ SelInd <- function(
     out$del_d <- (out$i / sqrt(out$var_I))[1,1] * out$G %*% t(out$D) %*% solve(out$D %*% out$G %*% t(out$D) + out$E) %*% out$D %*% out$G
     #out$del_d <- (out$i / sqrt(out$var_I))[1,1] * out$G %*% t(out$D) %*% solve(out$D %*% out$G %*% t(out$D) + out$E) %*% out$D %*% out$G %*% w
   }else{
-    if(verbose) message("- first derivative of d by w can only be calculated if selescion intensity (i) is supplied\n  --> calculating only scaled version")
+    if(verbose) message("- first derivative of d_G_exp by w can only be calculated if selescion intensity (i) is supplied\n  --> calculating only scaled version")
   }
   out$del_d_scaled <- out$G %*% t(out$D) %*% solve(out$D %*% out$G %*% t(out$D) + out$E) %*% out$D %*% out$G
   for(i in 1:nrow(out$del_d_scaled)){
@@ -210,30 +220,30 @@ SelInd <- function(
 
   # realized weights -----------------------------------------------------
 
-  if(!is.null(out$d_real)){
+  if(!is.null(out$d_G_obs)){
     if(any(dim(out$G) != dim(out$E))){
-      if(verbose) message("- m != n\n  --> subsetting w  and G to length m for calculation of realized weights")
+      if(verbose) message("- m != n\n  --> subsetting w  and G to length m for calculation of realized weights\n  !!! this discards a part of the variance-covariance structure !!! \n")
       tmp <- colnames(R)
-      out$b_real <-  solve(out$G[tmp,tmp] %*% t(out$D[,tmp]) %*% R) %*% out$d_real
-      out$w_real <- solve(out$D[,tmp] %*% out$G[tmp,tmp]) %*% (out$D[,tmp] %*% out$G[tmp,tmp] %*% t(out$D[,tmp]) + out$E) %*% solve(out$G[tmp,tmp] %*% t(out$D[,tmp])) %*% out$d_real
+      out$b_real <-  solve(out$G[tmp,tmp] %*% t(out$D[,tmp]) %*% R) %*% out$d_G_obs
+      out$w_real <- solve(out$D[,tmp] %*% out$G[tmp,tmp]) %*% (out$D[,tmp] %*% out$G[tmp,tmp] %*% t(out$D[,tmp]) + out$E) %*% solve(out$G[tmp,tmp] %*% t(out$D[,tmp])) %*% out$d_G_obs
     }else{
-      out$b_real <-  solve(out$G %*% t(out$D) %*% R) %*% out$d_real
-      out$w_real <- solve(out$D %*% out$G) %*% (out$D %*% out$G %*% t(out$D) + out$E) %*% solve(out$G %*% t(out$D)) %*% out$d_real
+      out$b_real <-  solve(out$G %*% t(out$D) %*% R) %*% out$d_G_obs
+      out$w_real <- solve(out$D %*% out$G) %*% (out$D %*% out$G %*% t(out$D) + out$E) %*% solve(out$G %*% t(out$D)) %*% out$d_G_obs
     }
     out$b_real <- out$b_real/sum(abs(out$b_real))
     out$w_real <- out$w_real/sum(abs(out$w_real))
 
   }else{
-    if(verbose) message("- No observed proportion of genetic progress given\n  --> cannot calculate realized weights")
+    if(verbose) message("- No observed composition of genetic progress given\n  --> cannot calculate realized weights")
   }
 
   # return output --------------------------------------------------------------
   out$b <- out$b[,1]
   out$var_I <- out$var_I[1,1]
   if(!is.null(out$b_scaled)) out$b_scaled <- out$b_scaled[,1]
-  if(!is.null(out$d)) out$d <- out$d[,1]
-  if(!is.null(out$d_rel_G)) out$d_rel_G <- out$d_rel_G[,1]
-  if(!is.null(out$d_rel_P)) out$d_rel_P <- out$d_rel_P[,1]
+  if(!is.null(out$d_G_exp)) out$d_G_exp <- out$d_G_exp[,1]
+  if(!is.null(out$d_G_exp_scaled)) out$d_G_exp_scaled <- out$d_G_exp_scaled[,1]
+  if(!is.null(out$d_P_exp_scaled)) out$d_P_exp_scaled <- out$d_P_exp_scaled[,1]
   if(!is.null(out$dG)) out$dG <- out$dG[1,1]
   #if(!is.null(out$del_d)) out$del_d <- out$del_d[,1]
   if(!is.null(out$b_real)) out$b_real <- out$b_real[,1]

@@ -9,11 +9,11 @@
 \arguments{
 \item{x}{An object of class SelInd}
 
-\item{row.names}{does nothing, only for generic compatibility}
+\item{row.names}{does nothing, only for compatibility with the generic function}
 
-\item{optional}{does nothing, only for generic compatibility}
+\item{optional}{does nothing, only for compatibility with the generic function}
 
-\item{...}{does nothing, only for generic compatibility}
+\item{...}{does nothing, only for compatibility with the generic function}
 
 \item{long}{logical indicating, whether resulting data.frame shall be in long format.}
 }

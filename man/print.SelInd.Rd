@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{An object of class SelInd}
 
-\item{...}{does nothing, only for generic compatibility}
+\item{...}{does nothing, only for compatibility with the generic function}
 }
 \description{
 Function to nicely print a SelInd object

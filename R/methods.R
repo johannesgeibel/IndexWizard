@@ -2,7 +2,7 @@
 #' Function to nicely print a SelInd object
 #'
 #' @param x An object of class SelInd
-#' @param ... does nothing, only for generic compatibility
+#' @param ... does nothing, only for compatibility with the generic function
 #'
 #' @export
 #'
@@ -20,20 +20,41 @@ print.SelInd <- function(x, ...){
   cat("\nMatrices",paste0(mats,collapse = ", "),"present in SelInd object, but not printed to reduce complexity.\n")
   cat("Extract them by the use of the `$` operator.\n")
 
-
+  # print variance of index and total excpected gain ---------------------------
+  cat("\n--------------------------------------------------------------------\n")
+  cat("\nVaiance of the index (`var_I`), expected genetic gain (`dG`)\nand assumed selection intensity (`i`):\n")
+  cat("\n$var_I:\n")
+  print(round(x$var_I,2))
+  if(!is.null(x$dG)){
+    cat("\n$dG:\n")
+    print(round(x$dG,2))
+  }
+  if(!is.null(x$i)){
+    cat("\n$i:\n")
+    print(round(x$i,2))
+  }
   # print weights --------------------------------------------------------------
   cat("\n--------------------------------------------------------------------\n")
-  cat("\nEconomic (w) and index weights (b). Potentially they are rescaled (`scaled`)\nso that sum(abs()) = 1. The weights might represent realized (`real`) weights\nbased on an observed composition of the genetic trend:\n")
+  cat("\nEconomic (`w`) and index weights (`b`). Potentially they are rescaled (`scaled`)\nso that sum(abs()) = 1. The weights might represent realized (`real`) weights\nbased on an observed composition of the genetic trend:\n")
   cat("\n$w:\n")
   print(round(x$w,2))
   cat("\n$b:\n")
   print(round(x$b,2))
   cat("\n$b_scaled:\n")
   print(round(x$b_scaled,2))
+  if(!is.null(x$w_real)){
+    cat("\n$w_real:\n")
+    print(round(x$w_real,2))
+  }
+  if(!is.null(x$b_real)){
+    cat("\n$b_real:\n")
+    print(round(x$b_real,2))
+  }
+
 
   # print r2 and h2 ------------------------------------------------------------
   cat("\n--------------------------------------------------------------------\n")
-  cat("\nreliabilities (r2) and heritabilities (h2) of the traits:\n")
+  cat("\nreliabilities (`r2`) and heritabilities (`h2`) of the traits:\n")
   cat("\n$r2:\n")
   print(round(x$r2,2))
   if(!is.null(x$h2)){
@@ -43,10 +64,29 @@ print.SelInd <- function(x, ...){
 
   # print compositions ---------------------------------------------------------
   cat("\n--------------------------------------------------------------------\n")
-  cat("\nComposition (d) of genetic (G) / phenotypic (P) trend.\n")
-  cat("The composition might be observed (`obs`), expected (`exp`) or realized (`real`).\n")
+  cat("\nComposition (`d`) of genetic (`G`) / phenotypic (`P`) trend.\n")
+  cat("The composition might be observed (`obs`) or expected (`exp`).\n")
   cat("The composition might be scaled (`scaled`) so that sum(abs()) = 1:\n")
-
+  if(!is.null(x$d_G_obs)){
+    cat("\n$d_G_obs:\n")
+    print(round(x$d_G_obs,2))
+  }
+  if(!is.null(x$d_G_exp)){
+    cat("\n$d_G_exp:\n")
+    print(round(x$d_G_exp,2))
+  }
+  if(!is.null(x$d_P_exp)){
+    cat("\n$d_P_exp:\n")
+    print(round(x$d_P_exp,2))
+  }
+  if(!is.null(x$d_G_exp_scaled)){
+    cat("\n$d_G_exp_scaled:\n")
+    print(round(x$d_G_exp_scaled,2))
+  }
+  if(!is.null(x$d_P_exp_scaled)){
+    cat("\n$d_P_exp_scaled:\n")
+    print(round(x$d_P_exp_scaled,2))
+  }
 
   # print analytic measures ----------------------------------------------------
   #print.default(x)
@@ -56,7 +96,7 @@ print.SelInd <- function(x, ...){
 #' Function to summarize the content of a SelInd object.
 #'
 #' @param object An object of class SelInd
-#' @param ... does nothing, only for generic compatibility
+#' @param ... does nothing, only for compatibility with the generic function
 #'
 #' @export
 #'
@@ -86,9 +126,9 @@ summary.SelInd <- function(object, ...){
 #' Function to coerce the results of a SelInd object to a data.frame for easy access.
 #'
 #' @param x An object of class SelInd
-#' @param row.names does nothing, only for generic compatibility
-#' @param optional does nothing, only for generic compatibility
-#' @param ... does nothing, only for generic compatibility
+#' @param row.names does nothing, only for compatibility with the generic function
+#' @param optional does nothing, only for compatibility with the generic function
+#' @param ... does nothing, only for compatibility with the generic function
 #' @param long logical indicating, whether resulting data.frame shall be in long format.
 #'
 #' @return a data.frame with traits in rows and result vectors in columns. if long = TRUE, a data.frame in long format with three columns (variable, trait and value)
