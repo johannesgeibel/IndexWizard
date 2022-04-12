@@ -169,7 +169,7 @@ SelInd <- function(
   }
 
   # calc index weights ---------------------------------------------------------
-  out$b <- solve(R %*% (out$D %*% out$G %*% t(out$D)) %*% R) %*% R %*% out$D %*% out$G %*% out$w
+  out$b <- solve(R %*% (out$D %*% out$G %*% t(out$D) + out$E) %*% R) %*% R %*% out$D %*% out$G %*% out$w
   out$b_scaled <- out$b / sum(abs(out$b))
 
   # calc variance of index -----------------------------------------------------
