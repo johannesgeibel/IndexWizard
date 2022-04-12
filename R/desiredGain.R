@@ -180,7 +180,7 @@ SelInd <- function(
     out$d_G_exp <- (out$i / sqrt(out$var_I)[1,1] ) * (out$G %*% t(out$D) %*% R %*% out$b)
     out$dG <- t(out$d_G_exp) %*% out$w
     if(!is.null(out$h2)){
-      out$d_P_exp <- out$d_G_exp * sqrt(out$h2[names(out$d_G_exp)]) / sqrt(diag(G[names(out$d_G_exp),names(out$d_G_exp)]))
+      out$d_P_exp <- out$d_G_exp * sqrt(out$h2) / sqrt(diag(G))
     }else{
       if(verbose) message("- no heritabilities provided\n  --> cannot compute the expected phenotypic trend")
     }
@@ -242,12 +242,16 @@ SelInd <- function(
   out$var_I <- out$var_I[1,1]
   if(!is.null(out$b_scaled)) out$b_scaled <- out$b_scaled[,1]
   if(!is.null(out$d_G_exp)) out$d_G_exp <- out$d_G_exp[,1]
+  if(!is.null(out$d_P_exp)) out$d_P_exp <- out$d_P_exp[,1]
   if(!is.null(out$d_G_exp_scaled)) out$d_G_exp_scaled <- out$d_G_exp_scaled[,1]
   if(!is.null(out$d_P_exp_scaled)) out$d_P_exp_scaled <- out$d_P_exp_scaled[,1]
   if(!is.null(out$dG)) out$dG <- out$dG[1,1]
   #if(!is.null(out$del_d)) out$del_d <- out$del_d[,1]
   if(!is.null(out$b_real)) out$b_real <- out$b_real[,1]
   if(!is.null(out$w_real)) out$w_real <- out$w_real[,1]
+  if(!is.null(out$r_IP)) out$r_IP <- out$r_IP[1,]
+  if(!is.null(out$r_IH)) out$r_IH <- out$r_IH[1,]
+
   return(out)
 }
 

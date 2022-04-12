@@ -89,6 +89,24 @@ print.SelInd <- function(x, ...){
   }
 
   # print analytic measures ----------------------------------------------------
+  cat("\n--------------------------------------------------------------------\n")
+  cat("\nAnalytic measures:\n")
+  cat("Correlation between the overall index and the phenotype of trait j (`r_IP`) and\n")
+  cat("the loss in prediction accuracy when omitting trait j from the index (`r_IH`).\n")
+  cat("Further the first derivative of d_G_exp with respect to w (`del_d_scaled`) with rows\nbeing scaled  so that sum(abs()) = 1.\n")
+  if(!is.null(x$r_IP)){
+    cat("\n$r_IP:\n")
+    print(round(x$r_IP,2))
+  }
+  if(!is.null(x$r_IH)){
+    cat("\n$r_IH:\n")
+    print(round(x$r_IH,2))
+  }
+  if(!is.null(x$del_d_scaled)){
+    cat("\n$del_d_scaled:\n")
+    print(round(x$del_d_scaled,2))
+  }
+
   #print.default(x)
 }
 
@@ -118,7 +136,10 @@ summary.SelInd <- function(object, ...){
   obj_in <- paste(names(object)[!sapply(object,is.null)], collapse = ", ")
   obj_out <- paste(names(object)[sapply(object,is.null)], collapse = ", ")
   cat("\nThe SelInd object contains the entries ",obj_in,".\n", sep = "")
-  cat("The SelInd object does not contain the entries ",obj_out,".\n", sep = "")
+  if(any(sapply(object,is.null))){
+    obj_out <- paste(names(object)[sapply(object,is.null)], collapse = ", ")
+    cat("The SelInd object does not contain the entries ",obj_out,".\n", sep = "")
+  }
 
 }
 
@@ -153,3 +174,4 @@ as.data.frame.SelInd <- function(x, row.names, optional, ..., long = FALSE){
     return(x)
   }
 }
+

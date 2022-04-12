@@ -1,9 +1,12 @@
 ---
 title: "Case Study"
 author:
-- Johannes Geibel^1,2^, Henner Simianer^1,2^
+- Henner Simianer^1,2^, Johannes Heise^3^, Stefan Rensing^3^, Torsten Pook^1,2^, Johannes Geibel^1,2^, Christian Reimer^1,2,4^
 - ^1^University of Goettingen, Department of Animal Sciences, Animal Breeding and Genetics Group
 - ^2^University of Goettingen, Center for Integrated Breeding Research
+- ^3^VIT
+- ^4^Friedrich-Loeffler-Institut, Institute of Farm Animal genetics
+
 - 'E-Mail\: johannes.geibel@uni-goettingen.de; hsimian@gwdg.de'
 
 output:
@@ -79,7 +82,7 @@ r2_old <- r2[w_old != 0]
 r2_new <- r2[w_new != 0]
 ```
 
-For the case of the old index, estimates of the realized genetic gains of the traits in the index are available.
+For the case of the old index, estimates of the observed genetic gains of the traits in the index are available.
 
 ```{r}
 deltautr <- c(0.28401392, 0.21637703, 0.17932963, 0.09986764, 0.08767239, 0.13273939)
@@ -140,7 +143,7 @@ The `summary()` function further gives information on the number of traits, and 
 summary(res)
 ```
 
-The `print()` function further re-formats the output to a more readable format, which includes rounding to two decimals.
+The `print()` function further re-formats the output to a more readable format, which includes rounding to two decimals. If you want to see the "pure" list, use `print.default()` instead.
 
 ```{r}
 res
@@ -157,21 +160,29 @@ res$b_scaled
 
 ## Index weights
 
+The basic usage of the selection index would be the calculation of index weights (`b`) to combine several estimated breeding values to one combined selection criterium (`I`). We can do this for both of our indices as follows:
+
 ```{r}
 res_old <- SelInd(w = w_old, G = G,  r2 = r2_old, verbose = FALSE)
 res_new <- SelInd(w = w_new, G = G,  r2 = r2_new, verbose = FALSE)
 ```
+
+The according index weights would then be:
 
 ```{r}
 round(res_old$b,2)
 round(res_new$b,2)
 ```
 
+Let's assume an arbitrary individual with following estimated breeding values:
+
 ```{r}
 
 ind <- c(RZM = 130, RZN = 110, RZEo = 105, RZEn = 106, RZR = 95,
          RZKm = 100, RZKd = 101, RZH = 115,  RZC = 90,  RZS = 120)
 ```
+
+The RZG_old of this animal would then be calculated as follows:
 
 ```{r}
 t(res_old$b_scaled) %*% ind[names(res_old$b_scaled)]
@@ -185,31 +196,131 @@ t(res_new$b_scaled) %*% ind[names(res_new$b_scaled)]
 
 ## Expected composition of gain
 
+Further interest might be, how the index translates into genetic gain. We can derive the expected composition of the total genetic gain by extracting `d_G_exp_scaled`. This is scaled so that the sum of absolute values in the vector sum up to one. Note that genetic gain is also expected in breeding goal traits that are not part of the index as correlated selection response.
+
+```{r}
+res_old <- SelInd(w = w_old, G = G,  r2 = r2_old, verbose = FALSE)
+round(res_old$d_G_exp_scaled, 2)
+```
+
+Even though the expected phenotypic trend in natural units equals the expected genotypic trend in natural units, a comparison of phenotypes across traits would usually follow a scaling in phenotypic standard deviations to make traits comparable. Due to different heritabilities of the traits, this also leads to another composition of the genetic gain. To calculate the expected composition of the total phenotypic gain (`d_P_exp_scaled`), we need to pass also heritabilities to the function. In our example, the phenotypic gain depends relatively more on milk ("RZM") than the genetic gain, as milk comes with a higher heritability.
+
+```{r}
+h2
+res_old <- SelInd(w = w_old, G = G,  r2 = r2_old, h2 = h2, verbose = FALSE)
+round(res_old$d_P_exp_scaled, 2)
+```
+
+The total genetic gain further depends on the selection intensity (`i`). So if we are interested in the total genetic gain in genetic standard deviations (`dG`), we need to further assume a selection intensity.
+
+```{r}
+res_old <- SelInd(w = w_old, G = G,  r2 = r2_old, h2 = h2, i = 0.1, verbose = FALSE)
+round(res_old$dG, 2)
+```
+
+We can then also retrieve the expected gain for the single traits (`d_G_exp` or `d_P_exp`) scaled in genetic/ phenotypic standard deviations.
+
+```{r}
+round(res_old$d_G_exp, 2)
+round(res_old$d_P_exp, 2)
+```
+
 ## Changes in expected gain
 
+Of strong practical interest should be the question how the genetic gain changes when the index is changed. This question can either be answered by comparison of different indices, or by calculation of analytic measures.
+
+### Comparison of indices
+
+We will first regard a situation where we not only have a numeric change in the economic weights, but also a discrete change in the index traits. Traits in `w`, but not in `r2` have an economic weight of zero, which allows to calculate information on the indirect response through correlations to index traits.
+
 ```{r}
-res_old <- SelInd(w = w_old, G = G,  r2 = r2_old, h2 = h2)
-res_new <- SelInd(w = w_new, G = G,  r2 = r2_new, h2 = h2)
+res_old <- SelInd(w = w_old, G = G,  r2 = r2_old, h2 = h2, verbose = FALSE)
+res_new <- SelInd(w = w_new, G = G,  r2 = r2_new, h2 = h2, verbose = FALSE)
 
 ```
 
+This then allows to compare the changes between the two indices, and we see that the total gain will be slightly less due to milk ("RZM"), but more due to gain in functional traits.
+
 ```{r}
-round(res_new$w - res_old$w,2)
+round(res_new$d_G_exp_scaled - res_old$d_G_exp_scaled,2)
 ```
 
+The same can also be done for the phenotypic trend, where this effect is even stronger due to the higher heritability of Milk.
+
 ```{r}
-round(res_new$d_rel_G - res_old$d_rel_G,2)
+round(res_new$d_P_exp_scaled - res_old$d_P_exp_scaled,2)
 ```
 
+### Use of analytic measures
+
+If we have a certain index and want to see which effect the single traits have on the composition of the total index, several analytical measures might help.
+
 ```{r}
-round(res_new$d_rel_P - res_old$d_rel_P,2)
+res_old <- SelInd(w = w_old, G = G,  r2 = r2_old, verbose = FALSE)
 ```
 
-```{r}
-round(h2,2)
-round(res_old$d_rel_P - res_old$d_rel_G,2)
-round(res_new$d_rel_P - res_new$d_rel_G,2)
+First one would be the correlation between the overall index $I$ and a phenotype in trait $j$ ($r_{I,y_j}$; `r_IP` ). It reflects, to what extent a trait contributes to the response in overall genetic merit.
 
+```{r}
+round(res_old$r_IP, 2)
+```
+
+Second one is the loss of accuracy of prediction if trait $j$ is omitted from the index ($\frac{r_{IH_{-j}}}{r_{IH}}$; `r_IH`), which reflects the contribution of trait $j$ to the overall selection objective.
+
+```{r}
+round(res_old$r_IH, 2)
+```
+
+Further, the first derivative of $d$ with respect to $w$ ($\frac{\delta d}{\delta w}$; `del_d_scaled`) tells us how a change in the economic weight in some trait would affect the composition of the genetic trend. Note that the values are scaled so that the sum of the absolute values within a row sums up to one. The first row thereby tells us that a change of the weight for "RZM" mainly affects the gain in "RZM", but only moderately affects the functional traits. A change in the weight for "RZN" (second row) also indirectly affects e.g. "RZR".
+
+```{r}
+round(res_old$del_d_scaled, 2)
 ```
 
 ## Realized gain
+
+A further interesting feature of the method is to compare the expected composition of the gain with the observed genetic trend. Note that we subset `w` and `G` to the index traits, to have a matching scaling.
+
+```{r}
+res_old <- SelInd(w = w_old[w_old>0], G = G[w_old>0,w_old>0],  r2 = r2_old, verbose = FALSE)
+round(deltautr - res_old$d_G_exp_scaled, 3)
+
+```
+
+This shows us that the resulting trend matches the expected well with probably slightly more weight on exterieur ("RZEo") and reproduction ("RZR").
+
+We can also check what this meant for the economic and index weights by calculating "realized weights" given the observed gains
+
+```{r}
+res_old <- SelInd(
+  w = w_old[w_old>0],
+  G = G[w_old>0, w_old>0],
+  r2 = r2_old,
+  d_G_obs = deltautr,
+  verbose = FALSE)
+round(res_old$w_real - res_old$w, 2)
+round(res_old$b_real - res_old$b_scaled, 2)
+```
+
+This reveals that there was effectively slightly more weight on "RZEo" and "RZR" in practical breeding decisions than suggested by the index.
+
+### Correlated residuals
+
+The previous section assumed uncorrelated residual errors, which might not hold in reality. `SelInd()` therefore also allows to include the residual variance-covariance matrix of the traits (`H`).
+
+```{r}
+res_old_corRes <- SelInd(
+  w = w_old[w_old>0],
+  G = G[w_old>0, w_old>0],
+  r2 = r2_old,
+  d_G_obs = deltautr,
+  H = H,
+  verbose = FALSE)
+```
+
+Modelling those residual correlations between the traits actually increases the fit between expectation and observation:
+
+```{r}
+round(res_old$w_real - res_old$w, 2) # uncorrelated residuals
+round(res_old_corRes$w_real - res_old_corRes$w, 2) # correlated residuals
+```

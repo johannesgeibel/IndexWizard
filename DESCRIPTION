@@ -1,7 +1,7 @@
 Package: desiredGains
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.1
+Title: A package to construct selection indices and to calculate several analytical measures around.
+Version: 0.1.2
 Authors@R: c(
     person("Henner","Simianer",email = "hsimian@gwdg.de",role = c("aut"),comment = c(ORCID = "0000-0002-7551-3797")),
     person("Johannes","Geibel",email = "johannes.geibel@uni-goettingen.de",role = c("aut","cre"),comment = c(ORCID = "0000-0001-7172-3263"))
