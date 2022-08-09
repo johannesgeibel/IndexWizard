@@ -64,4 +64,4 @@ Read the vignette `CaseStudy` for a detailed introduction, covering different us
 vignette("CaseStudy", package = "IndexWizard")
 ```
 
-Further find the analysis script for Simianer *et al.* (to be submitted) in this repository.
+Further find the analysis [script](https://github.com/johannesgeibel/IndexWizard/blob/main/scripts/makePlots.r) for Simianer *et al.* (to be submitted) in this repository.

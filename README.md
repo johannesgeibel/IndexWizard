@@ -69,5 +69,6 @@ different use cases of the framework.
 vignette("CaseStudy", package = "IndexWizard")
 ```
 
-Further find the analysis script for Simianer *et al.* (to be submitted)
-in this repository.
+Further find the analysis
+[script](https://github.com/johannesgeibel/IndexWizard/blob/main/scripts/makePlots.r)
+for Simianer *et al.* (to be submitted) in this repository.
