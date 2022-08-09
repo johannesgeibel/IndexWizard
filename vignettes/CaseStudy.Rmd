@@ -27,7 +27,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup, include = FALSE}
-library(desiredGains)
+library(IndexWizard)
 ```
 
 # The data
@@ -90,7 +90,7 @@ names(deltautr) <- tn[w_old>0]
 
 ```
 
-We may further need heritabilities of the traits to translate genetic gain into phenotypic gain.
+We may further need heritabilities ($h^2$) of the traits to translate genetic gain into phenotypic gain.
 
 ```{r}
 h2 <- c(0.314, 0.090, 0.194, 0.194, 0.013, 0.049, 0.033, 0.061, 0.014, 0.273)
@@ -114,10 +114,10 @@ H <- H * 144
 H
 ```
 
-# Usage of the package `desiredGains`
+# Usage of the package `IndexWizard`
 
 ```{r eval=FALSE, include=FALSE}
-library(desiredGains)
+library(IndexWizard)
 ```
 
 All index calcualations are performed within the function `SelInd()` . Minimum required input are `w`, `G` and `r2`. Note that all vectors and matrices need to be named to allow checks and sorting based on trait names.

@@ -5,6 +5,24 @@
 #' @param ... does nothing, only for compatibility with the generic function
 #'
 #' @export
+#' @examples
+#' tn <- c("RZM", "RZN", "RZEo")
+#' G <- matrix(
+#'     c(1.0,0.13,0.13,
+#'     0.13,1.0,0.23,
+#'     0.13,0.23,1.0),
+#'     3, 3, dimnames = list(tn,tn)
+#'     ) * 144
+#' w <- c(0.7, 0.3, 0)
+#' names(w) <- tn
+#' r2 <- c(0.743, 0.673)
+#' names(r2) <- tn[1:2]
+#' res <- SelInd(
+#'   w = w,
+#'   G = G,
+#'   r2 = r2
+#' )
+#' print(res)
 #'
 print.SelInd <- function(x, ...){
   cat(
@@ -117,6 +135,24 @@ print.SelInd <- function(x, ...){
 #' @param ... does nothing, only for compatibility with the generic function
 #'
 #' @export
+#' @examples
+#' tn <- c("RZM", "RZN", "RZEo")
+#' G <- matrix(
+#'     c(1.0,0.13,0.13,
+#'     0.13,1.0,0.23,
+#'     0.13,0.23,1.0),
+#'     3, 3, dimnames = list(tn,tn)
+#'     ) * 144
+#' w <- c(0.7, 0.3, 0)
+#' names(w) <- tn
+#' r2 <- c(0.743, 0.673)
+#' names(r2) <- tn[1:2]
+#' res <- SelInd(
+#'   w = w,
+#'   G = G,
+#'   r2 = r2
+#' )
+#' summary(res)
 #'
 summary.SelInd <- function(object, ...){
   cat(
@@ -143,35 +179,35 @@ summary.SelInd <- function(object, ...){
 
 }
 
-# as.data.frame ----------------------------------------------------------------
-#' Function to coerce the results of a SelInd object to a data.frame for easy access.
-#'
-#' @param x An object of class SelInd
-#' @param row.names does nothing, only for compatibility with the generic function
-#' @param optional does nothing, only for compatibility with the generic function
-#' @param ... does nothing, only for compatibility with the generic function
-#' @param long logical indicating, whether resulting data.frame shall be in long format.
-#'
-#' @return a data.frame with traits in rows and result vectors in columns. if long = TRUE, a data.frame in long format with three columns (variable, trait and value)
-#' @export
-#'
-as.data.frame.SelInd <- function(x, row.names, optional, ..., long = FALSE){
-  x <- t(x$results)
-  x <- as.data.frame(x)
-  if(long){
-    out <- list()
-    for(i in 1:length(x)){
-      out[[i]] <- data.frame(
-        variable = colnames(x)[i],
-        trait = rownames(x),
-        value = x[[i]]
-      )
-    }
-    out <- do.call(rbind,out)
-    rownames(out) <- NULL
-    return(out)
-  }else{
-    return(x)
-  }
-}
+# # as.data.frame ----------------------------------------------------------------
+# #' Function to coerce the results of a SelInd object to a data.frame for easy access.
+# #'
+# #' @param x An object of class SelInd
+# #' @param row.names does nothing, only for compatibility with the generic function
+# #' @param optional does nothing, only for compatibility with the generic function
+# #' @param ... does nothing, only for compatibility with the generic function
+# #' @param long logical indicating, whether resulting data.frame shall be in long format.
+# #'
+# #' @return a data.frame with traits in rows and result vectors in columns. if long = TRUE, a data.frame in long format with three columns (variable, trait and value)
+# #' @export
+# #'
+# as.data.frame.SelInd <- function(x, row.names, optional, ..., long = FALSE){
+#   x <- t(x$results)
+#   x <- as.data.frame(x)
+#   if(long){
+#     out <- list()
+#     for(i in 1:length(x)){
+#       out[[i]] <- data.frame(
+#         variable = colnames(x)[i],
+#         trait = rownames(x),
+#         value = x[[i]]
+#       )
+#     }
+#     out <- do.call(rbind,out)
+#     rownames(out) <- NULL
+#     return(out)
+#   }else{
+#     return(x)
+#   }
+# }
 

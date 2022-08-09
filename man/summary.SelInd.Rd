@@ -14,3 +14,23 @@
 \description{
 Function to summarize the content of a SelInd object.
 }
+\examples{
+tn <- c("RZM", "RZN", "RZEo")
+G <- matrix(
+    c(1.0,0.13,0.13,
+    0.13,1.0,0.23,
+    0.13,0.23,1.0),
+    3, 3, dimnames = list(tn,tn)
+    ) * 144
+w <- c(0.7, 0.3, 0)
+names(w) <- tn
+r2 <- c(0.743, 0.673)
+names(r2) <- tn[1:2]
+res <- SelInd(
+  w = w,
+  G = G,
+  r2 = r2
+)
+summary(res)
+
+}

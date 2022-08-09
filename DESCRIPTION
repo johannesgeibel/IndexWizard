@@ -1,14 +1,17 @@
-Package: desiredGains
+Package: IndexWizard
 Type: Package
-Title: A package to construct selection indices and to calculate several analytical measures around.
-Version: 0.1.2
+Title: A package to construct selection indices based on estimated breeding values in animal and plant breeding
+Version: 0.1.3
 Authors@R: c(
-    person("Henner","Simianer",email = "hsimian@gwdg.de",role = c("aut"),comment = c(ORCID = "0000-0002-7551-3797")),
-    person("Johannes","Geibel",email = "johannes.geibel@uni-goettingen.de",role = c("aut","cre"),comment = c(ORCID = "0000-0001-7172-3263"))
+    person("Johannes","Geibel",email = "johannes.geibel@uni-goettingen.de",role = c("aut","cre"),comment = c(ORCID = "0000-0001-7172-3263")),
+    person("Christian","Reimer",role = c("aut"),comment = c(ORCID = "0000-0002-9697-2511")),
+    person("Torsten","Pook",role = c("aut"),comment = c(ORCID = "0000-0001-7874-8500")),
+    person("Johannes","Heise",role = c("aut"),comment = c(ORCID = "0000-0002-7605-7148")),
+    person("Stefan","Rensing",role = c("aut")),
+    person("Henner","Simianer",email = "hsimian@gwdg.de",role = c("aut"),comment = c(ORCID = "0000-0002-7551-3797"))
     )
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Description: A package to construct selection indices based on estimated breeding values in animal and plant breeding and to calculate several analytical measures around. The methodology thereby allows to analyze genetic gain of traits in the breeding goal which are not part of the actual index and automatically computes several analytical measures. It further allows to retrospecively derive realized economic weights from observed genetic trends.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.2
@@ -16,5 +19,5 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
-URL: https://github.com/johannesgeibel/desiredGains
-BugReports: https://github.com/johannesgeibel/desiredGains/issues
+URL: https://github.com/johannesgeibel/IndexWizard
+BugReports: https://github.com/johannesgeibel/IndexWizard/issues
