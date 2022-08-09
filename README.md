@@ -4,6 +4,9 @@
 # IndexWizard
 
 <!-- badges: start -->
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6977265.svg)](https://doi.org/10.5281/zenodo.6977265)
+
 <!-- badges: end -->
 
 The goal of IndexWizard is to provide a framework for the exploration of
