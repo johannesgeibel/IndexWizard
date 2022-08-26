@@ -17,7 +17,9 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 
-`r badger::badge_doi("https://doi.org/10.5281/zenodo.6977265", "blue")` `r badger::badge_cran_checks("badger")` `r badger::badge_license("MIT")` `r badger::badge_devel("johannesgeibel/IndexWizard", "blue")`
+`r badger::badge_doi("https://doi.org/10.5281/zenodo.6977265", "blue")` `r badger::badge_devel("johannesgeibel/IndexWizard", "blue")` `r badger::badge_cran_release("IndexWizard", "orange")`
+  
+`r badger::badge_cran_checks("IndexWizard")` `r badger::badge_license("MIT")`
 
 <!-- badges: end -->
 

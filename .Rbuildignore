@@ -5,3 +5,4 @@
 ^LICENSE\.md$
 ^plots_publication
 ^scripts
+^cran-comments\.md$

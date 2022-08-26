@@ -6,11 +6,13 @@
 <!-- badges: start -->
 
 [![](https://img.shields.io/badge/doi-https://doi.org/10.5281/zenodo.6977265-blue.svg)](https://doi.org/https://doi.org/10.5281/zenodo.6977265)
+[![](https://img.shields.io/badge/devel%20version-0.1.3.2-blue.svg)](https://github.com/johannesgeibel/IndexWizard)
+[![](https://www.r-pkg.org/badges/version/IndexWizard?color=orange)](https://cran.r-project.org/package=IndexWizard)
+
 [![CRAN
-checks](https://cranchecks.info/badges/summary/badger)](https://cran.r-project.org/web/checks/check_results_badger.html)
+checks](https://cranchecks.info/badges/summary/IndexWizard)](https://cran.r-project.org/web/checks/check_results_IndexWizard.html)
 [![License:
 MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://cran.r-project.org/web/licenses/MIT)
-[![](https://img.shields.io/badge/devel%20version-0.1.3.2-blue.svg)](https://github.com/johannesgeibel/IndexWizard)
 
 <!-- badges: end -->
 
