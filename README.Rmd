@@ -17,17 +17,17 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6977265.svg)](https://doi.org/10.5281/zenodo.6977265)
+`r badger::badge_doi("https://doi.org/10.5281/zenodo.6977265", "blue")` `r badger::badge_cran_checks("badger")` `r badger::badge_license("MIT")` `r badger::badge_devel("johannesgeibel/IndexWizard", "blue")`
 
 <!-- badges: end -->
 
-The goal of IndexWizard is to provide a framework for the exploration of effects of complex selection indices. It allows to construct selection indices based on estimated breeding values in animal and plant breeding and to calculate several analytical measures around. The methodology thereby allows to analyze genetic gain of traits in the breeding goal which are not part of the actual index and automatically computes several analytical measures. It further allows to retrospecively derive realized economic weights from observed genetic trends. See Simianer *et al.* (in preparation) for a detailed description of the methodology.
+The goal of 'IndexWizard' is to provide a framework for the exploration of effects of complex selection indices. It allows to construct selection indices based on estimated breeding values in animal and plant breeding and to calculate several analytic measures around. The methodology thereby allows to analyze genetic gain of traits in the breeding goal which are not part of the actual index and automatically computes several analytic measures. It further allows to retrospectively derive realized economic weights from observed genetic trends. See Simianer *et al.* (submitted to GSE) for a detailed description of the methodology.
 
 ## Installation
 
 You can install the development version of `IndexWizard` from [GitHub](https://github.com/) with:
 
-``` r
+```{r eval=FALSE, include=TRUE}
 # install.packages("devtools")
 devtools::install_github("johannesgeibel/IndexWizard")
 ```
@@ -66,4 +66,4 @@ Read the vignette `CaseStudy` for a detailed introduction, covering different us
 vignette("CaseStudy", package = "IndexWizard")
 ```
 
-Further find the analysis [script](https://github.com/johannesgeibel/IndexWizard/blob/main/scripts/makePlots.r) for Simianer *et al.* (to be submitted) in this repository.
+Further find the analysis [script](https://github.com/johannesgeibel/IndexWizard/blob/main/scripts/makePlots.r) for Simianer *et al.* (submitted to GSE) in this repository.

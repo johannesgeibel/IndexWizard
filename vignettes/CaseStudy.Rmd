@@ -4,7 +4,7 @@ author:
 - Henner Simianer^1,2^, Johannes Heise^3^, Stefan Rensing^3^, Torsten Pook^1,2^, Johannes Geibel^1,2^, Christian Reimer^1,2,4^
 - ^1^University of Goettingen, Department of Animal Sciences, Animal Breeding and Genetics Group
 - ^2^University of Goettingen, Center for Integrated Breeding Research
-- ^3^VIT
+- ^3^IT solutions for animal production (vit)
 - ^4^Friedrich-Loeffler-Institut, Institute of Farm Animal genetics
 
 - 'E-Mail\: johannes.geibel@uni-goettingen.de; hsimian@gwdg.de'
@@ -32,7 +32,7 @@ library(IndexWizard)
 
 # The data
 
-The case study handles the situation in German Holstein Friesian breeding where the general Index (RZG) is based on several traits. The composition of the index changed in 2021, so that there are now eight instead of 6 traits in the index. Also, the exact trait definition was changed. In total, there are 10 "breeding goal traits". See Simianer *et al.* (to be submitted) for more details on it.
+The case study handles the situation in German Holstein Friesian (HF) breeding where the general Index (RZG) is based on several traits. The composition of the index changed in 2021, so that there are now eight instead of 6 traits in the index. Also, the exact trait definition was changed. In total, there are 10 "breeding goal traits". See Simianer *et al.* (to be submitted) for more details on it.
 
 The economic weights (`w`) of the indices are as follows, with traits not in the index having zero weight.
 
@@ -63,7 +63,7 @@ G <- matrix(
     0.04,0.46,0.19,0.25,0.15,0.13,0.10,0.57,0.02,1.0)
   ,byrow = TRUE, nrow = length(tn), ncol = length(tn), dimnames = list(tn, tn)
 )
-G <- G*144
+G <- G*12^2
 G
 ```
 
@@ -75,14 +75,16 @@ names(r2) <- tn; r2
 
 ```
 
-If we regard the actual situations, when breeding value estimation is only performed for the actual index traits, $r$ needs to be subsetted.
+> Note: If you calculate an index for observed phenotypes based on own performances, the reliability ( $r^2$ ) equals the narrow sense heritability ( $h^2$ ).
+
+If we regard a situation where breeding value estimation is only performed for the actual index traits, $r^2$ needs to be subsetted.
 
 ```{r}
 r2_old <- r2[w_old != 0]
 r2_new <- r2[w_new != 0]
 ```
 
-For the case of the old index, estimates of the observed genetic gains of the traits in the index are available.
+For the case of the old index, estimates of the observed genetic gains of the traits in the index are available from evaluations of the HF breeding program.
 
 ```{r}
 deltautr <- c(0.28401392, 0.21637703, 0.17932963, 0.09986764, 0.08767239, 0.13273939)
