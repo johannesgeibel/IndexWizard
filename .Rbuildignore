@@ -6,3 +6,4 @@
 ^plots_publication
 ^scripts
 ^cran-comments\.md$
+^CRAN-SUBMISSION$
