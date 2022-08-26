@@ -32,7 +32,7 @@ library(IndexWizard)
 
 # The data
 
-The case study handles the situation in German Holstein Friesian (HF) breeding where the general Index (RZG) is based on several traits. The composition of the index changed in 2021, so that there are now eight instead of 6 traits in the index. Also, the exact trait definition was changed. In total, there are 10 "breeding goal traits". See Simianer *et al.* (to be submitted) for more details on it.
+The case study handles the situation in German Holstein Frisian (HF) breeding where the general Index (RZG) is based on several traits. The composition of the index changed in 2021, so that there are now eight instead of 6 traits in the index. Also, the exact trait definition was changed. In total, there are 10 "breeding goal traits". See Simianer *et al.* (to be submitted) for more details on it.
 
 The economic weights (`w`) of the indices are as follows, with traits not in the index having zero weight.
 
@@ -122,7 +122,7 @@ H
 library(IndexWizard)
 ```
 
-All index calcualations are performed within the function `SelInd()` . Minimum required input are `w`, `G` and `r2`. Note that all vectors and matrices need to be named to allow checks and sorting based on trait names.
+All index calculations are performed within the function `SelInd()` . Minimum required input are `w`, `G` and `r2`. Note that all vectors and matrices need to be named to allow checks and sorting based on trait names.
 
 ```{r}
 res <- SelInd(
@@ -255,7 +255,7 @@ round(res_new$d_P_exp_scaled - res_old$d_P_exp_scaled,2)
 
 ### Use of analytic measures
 
-If we have a certain index and want to see which effect the single traits have on the composition of the total index, several analytical measures might help.
+If we have a certain index and want to see which effect the single traits have on the composition of the total index, several analytic measures might help.
 
 ```{r}
 res_old <- SelInd(w = w_old, G = G,  r2 = r2_old, verbose = FALSE)
@@ -289,7 +289,7 @@ round(deltautr - res_old$d_G_exp_scaled, 3)
 
 ```
 
-This shows us that the resulting trend matches the expected well with probably slightly more weight on exterieur ("RZEo") and reproduction ("RZR").
+This shows us that the resulting trend matches the expected well with probably slightly more weight on exterior ("RZEo") and reproduction ("RZR").
 
 We can also check what this meant for the economic and index weights by calculating "realized weights" given the observed gains
 

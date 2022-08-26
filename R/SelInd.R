@@ -2,7 +2,7 @@
 #'
 #' @param w Numeric vector of n economic weights. Traits present in G, but not part of the index need to be coded as 0. If traits of G are missing, they will be added automatically with zero weight. Required.
 #' @param G Named n*n genetic variance- covariance matrix. Dimnames of G need to match w to ensure correct sorting.  Required.
-#' @param r2 Named numeric vector of reliabilites with length m. Required.
+#' @param r2 Named numeric vector of reliabilities with length m. Required.
 #' @param H Named m*m variance-covariance matrix of estimated breeding to internally derive the residual variance-covariance matrix. If H contains more traits than r2, it will be subsetted.
 #' @param i Selection intensity
 #' @param h2 named numeric vector of length n containing heritabilities for the traits

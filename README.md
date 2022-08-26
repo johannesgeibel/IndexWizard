@@ -41,7 +41,7 @@ Note that `devtools` requires
 [Rtools](https://cran.r-project.org/bin/windows/Rtools/) to be installed
 on Windows systems.
 
-It is planned to submit the package to cran soon.
+It is planned to submit the package to CRAN soon.
 
 ## Example
 

@@ -11,7 +11,7 @@ SelInd(w, G, r2, H = NULL, i = NULL, h2 = NULL, d_G_obs = NULL, verbose = TRUE)
 
 \item{G}{Named n*n genetic variance- covariance matrix. Dimnames of G need to match w to ensure correct sorting.  Required.}
 
-\item{r2}{Named numeric vector of reliabilites with length m. Required.}
+\item{r2}{Named numeric vector of reliabilities with length m. Required.}
 
 \item{H}{Named m*m variance-covariance matrix of estimated breeding to internally derive the residual variance-covariance matrix. If H contains more traits than r2, it will be subsetted.}
 
