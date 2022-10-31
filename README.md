@@ -34,7 +34,7 @@ You can install the development version of `IndexWizard` from
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("johannesgeibel/IndexWizard")
+devtools::install_github("johannesgeibel/IndexWizard", build_vignettes = TRUE)
 ```
 
 Note that `devtools` requires
@@ -49,9 +49,7 @@ All calculations are solely performed in the function `SelInd()`. Its
 minimal input requirements are a named genetic covariance matrix (`G`)
 for all n breeding goal traits, a named vector of economic weights (`w`)
 for the n breeding goal traits and a named vector of reliabilities
-(`r2`) of the estimated breeding values for the
-![m \le n](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;m%20%5Cle%20n "m \le n")
-index traits.
+(`r2`) of the estimated breeding values for the $m \le n$ index traits.
 
 ``` r
 library(IndexWizard)
