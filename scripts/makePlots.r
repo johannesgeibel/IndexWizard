@@ -405,10 +405,12 @@ res_new <- SelInd(
   w = w_new[w_new != 0],
   G = G[names(w_new[w_new != 0]),names(w_new[w_new != 0])],
   r2 = r2_new,
-  verbose = TRUE)
+  verbose = FALSE)
 
 ## table 3A --------------------------------------------------------------------
 round(res_old$del_d_scaled, 2)
+round(res_old$del_d_scaled_new, 2)
+rowSums(abs(res_old$del_d_scaled_new))
 
 ## table 3B --------------------------------------------------------------------
 round(res_new$del_d_scaled, 2)

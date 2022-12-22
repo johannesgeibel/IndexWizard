@@ -216,12 +216,34 @@ SelInd <- function(
   }else{
     if(verbose) message("- first derivative of d_G_exp by w can only be calculated if selescion intensity (i) is supplied\n  --> calculating only scaled version")
   }
+  # old del_d_scaled
   out$del_d_scaled <- out$G %*% t(out$D) %*% solve(out$D %*% out$G %*% t(out$D) + out$E) %*% out$D %*% out$G
   for(i in 1:nrow(out$del_d_scaled)){
     srow <- sum(abs(out$del_d_scaled[i,]))
     out$del_d_scaled[i,] <- out$del_d_scaled[i,] / srow
   }
-
+  ##############################################################################
+  # new scaled
+  # necessary to scale by sd of trait as well -> same for all traits right now..., also in deld??
+  delta <- 0.001
+  out$del_d_scaled_new <- matrix(0,length(out$w),length(out$w),dimnames = list(names(out$w),names(out$w)))
+  
+  for(i in 1:length(out$w)){
+    wmod <- out$w*(1-delta/(1-out$w[i]))
+    wmod[i]<-out$w[i]+delta
+    
+    bmod <- solve(R %*% (out$D %*% out$G %*% t(out$D) + out$E) %*% R) %*% R %*% out$D %*% out$G %*% wmod
+    #var_mod <- t(bmod) %*% R %*% (out$D %*% out$G %*% t(out$D) + out$E) %*% R %*% bmod
+    
+    #(out$i / sqrt(out$var_I)[1,1] ) * (out$G %*% t(out$D) %*% R %*% out$b)
+    out$del_d_scaled_new[i,] <- (out$G %*% t(out$D) %*% R %*% bmod)
+    out$del_d_scaled_new[i,] <- out$del_d_scaled_new[i,]/sum(abs(out$del_d_scaled_new[i,]))
+    out$del_d_scaled_new[i,] <- out$del_d_scaled_new[i,]/out$d_G_exp_scaled - 1 # would be gain/loss relative to previous
+    out$del_d_scaled_new[i,] <- out$del_d_scaled_new[i,]/sum(abs(out$del_d_scaled_new[i,])) # would be relative change 
+  }
+  
+  ##############################################################################
+  ##############################################################################
   # realized weights -----------------------------------------------------
 
   if(!is.null(out$d_G_obs)){
