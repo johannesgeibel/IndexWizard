@@ -224,7 +224,7 @@ SelInd <- function(
   }
   ##############################################################################
   # new scaled
-  delta <- 0.001
+  delta <- 0.0001
   out$del_d_scaled_new <- matrix(0,length(out$w),length(out$w),dimnames = list(names(out$w),names(out$w)))
   out$del_d_scaled_new_diff <- out$del_d_scaled_new_rel <- out$del_d_scaled_new1 <- out$del_d_scaled_new2 <- out$del_d_scaled_new
   d0 <- t(out$G %*% t(out$D) %*% R %*% out$b) / (sqrt(out$var_I)[1,1])
