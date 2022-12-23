@@ -409,8 +409,15 @@ res_new <- SelInd(
 
 ## table 3A --------------------------------------------------------------------
 round(res_old$del_d_scaled, 2)
-round(res_old$del_d_scaled_new, 2)
-rowSums(abs(res_old$del_d_scaled_new))
+round(res_old$del_d_scaled_new_diff, 3)
+round(res_old$del_d_scaled_new_rel, 3)
+round(res_old$del_d_scaled_new1, 2)
+round(res_old$del_d_scaled_new2, 2)
+
+res_old$del_d_scaled_new1 %*% out$w
+
+rowSums(abs(res_old$del_d_scaled_new1))
+rowSums(abs(res_old$del_d_scaled_new2))
 
 ## table 3B --------------------------------------------------------------------
 round(res_new$del_d_scaled, 2)
