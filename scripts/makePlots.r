@@ -396,7 +396,7 @@ if(savePlots){
 res_old <- SelInd(
   w = w_old[w_old != 0],
   G = G[names(w_old[w_old != 0]),names(w_old[w_old != 0])],
-#  H=H,
+  H = H,
   r2 = r2_old,
   verbose = FALSE)
 
@@ -407,17 +407,23 @@ res_new <- SelInd(
   r2 = r2_new,
   verbose = FALSE)
 
-## table 3A --------------------------------------------------------------------
+## table 3A - mit H --------------------------------------------------------------------
 round(res_old$del_d_scaled, 2)
-round(res_old$del_d_scaled_new_diff, 3)
-round(res_old$del_d_scaled_new_rel, 3)
-round(res_old$del_d_scaled_new1, 2)
-round(res_old$del_d_scaled_new2, 2)
+round(res_old$del_d_scaled_new_diff, 4) # absolute difference in gain per trait
+round(res_old$del_d_scaled_new, 2) # scaled so that sum of abs(rows) = 1
+round(res_old$del_d_scaled_new_pook, 2) # pook scaling
 
-res_old$del_d_scaled_new1 %*% out$w
 
-rowSums(abs(res_old$del_d_scaled_new1))
-rowSums(abs(res_old$del_d_scaled_new2))
+## table 3A - ohne H --------------------------------------------------------------------
+res_old <- SelInd(
+  w = w_old[w_old != 0],
+  G = G[names(w_old[w_old != 0]),names(w_old[w_old != 0])],
+  r2 = r2_old,
+  verbose = FALSE)
+round(res_old$del_d_scaled, 2)
+round(res_old$del_d_scaled_new_diff, 4) # absolute difference in gain per trait
+round(res_old$del_d_scaled_new, 2) # scaled so that sum of abs(rows) = 1
+round(res_old$del_d_scaled_new_pook, 2) # pook scaling
 
 ## table 3B --------------------------------------------------------------------
 round(res_new$del_d_scaled, 2) # old results
