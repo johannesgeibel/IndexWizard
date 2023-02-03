@@ -396,7 +396,7 @@ if(savePlots){
 res_old <- SelInd(
   w = w_old[w_old != 0],
   G = G[names(w_old[w_old != 0]),names(w_old[w_old != 0])],
-  H=H,
+#  H=H,
   r2 = r2_old,
   verbose = FALSE)
 
@@ -420,4 +420,17 @@ rowSums(abs(res_old$del_d_scaled_new1))
 rowSums(abs(res_old$del_d_scaled_new2))
 
 ## table 3B --------------------------------------------------------------------
-round(res_new$del_d_scaled, 2)
+round(res_new$del_d_scaled, 2) # old results
+round(res_new$del_d_scaled_new_diff, 4) # absolute difference in gain per trait
+round(res_new$del_d_scaled_new, 2) # scaled so that sum of abs(rows) = 1
+rowSums(abs(res_new$del_d_scaled_new))
+
+# Comment Pook:
+# Ich wuerde vorschlagen zu skalieren das die Diagonale 1 ist um auszudruecken wie viel
+# sich andere Merkmale veraendern pro zusaetzlichem Zuchtfortschritt um einen Plus im
+# Merkmal mit dem hoeheren Index
+round(res_new$del_d_scaled_new_pook, 2) # pook scaling
+
+res_new$del_d_scaled_new_diff %*% res_new$w
+res_new$del_d_scaled_new %*% res_new$w
+res_new$del_d_scaled_new_pook %*% res_new$w

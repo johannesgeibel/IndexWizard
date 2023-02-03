@@ -237,15 +237,17 @@ SelInd <- function(
     # get modified b
     bmod <- solve(R %*% (out$D %*% out$G %*% t(out$D) + out$E) %*% R) %*% R %*% out$D %*% out$G %*% wmod
     var_mod <- t(bmod) %*% R %*% (out$D %*% out$G %*% t(out$D) + out$E) %*% R %*% bmod
-    #(out$i / sqrt(out$var_I)[1,1] ) * (out$G %*% t(out$D) %*% R %*% out$b)
     
-    out$del_d_scaled_new[i,] <- (out$G %*% t(out$D) %*% R %*% bmod) / sqrt(var_mod)[1,1] # no scaling by i/sd 
-    out$del_d_scaled_new[i,] <- out$del_d_scaled_new[i,] #/sum(abs(out$del_d_scaled_new[i,]))
+    # calc modified gain
+    out$del_d_scaled_new[i,] <- (out$G %*% t(out$D) %*% R %*% bmod) / sqrt(var_mod)[1,1] # no scaling by i
     out$del_d_scaled_new_diff[i,] <- out$del_d_scaled_new[i,] - d0 # would be gain different to previous
-    out$del_d_scaled_new_rel[i,] <- out$del_d_scaled_new[i,] / d0 - 1 # would be gain relative to previous
+    out$del_d_scaled_new[i,] <- out$del_d_scaled_new_diff[i,] /sum(abs(out$del_d_scaled_new_diff[i,]))
+    out$del_d_scaled_new_pook <- out$del_d_scaled_new_diff / diag(out$del_d_scaled_new_diff)
     
-    out$del_d_scaled_new1[i,] <- out$del_d_scaled_new_diff[i,]/sum(abs(out$del_d_scaled_new_diff[i,])) # would be scaled difference
-    out$del_d_scaled_new2[i,] <- out$del_d_scaled_new_rel[i,]/sum(abs(out$del_d_scaled_new_rel[i,])) # would be scaled relative change 
+    #out$del_d_scaled_new_rel[i,] <- out$del_d_scaled_new[i,] / d0 - 1 # would be gain relative to previous
+    
+    #out$del_d_scaled_new1[i,] <- out$del_d_scaled_new_diff[i,]/sum(abs(out$del_d_scaled_new_diff[i,])) # would be scaled difference
+    #out$del_d_scaled_new2[i,] <- out$del_d_scaled_new_rel[i,]/sum(abs(out$del_d_scaled_new_rel[i,])) # would be scaled relative change 
   }
   
   ##############################################################################
