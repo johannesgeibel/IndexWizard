@@ -394,7 +394,7 @@ if(savePlots){
 
 
 # table 3 ----------------------------------------------------------------------
-# calculations require subsetting of w and G
+# calculations require subsetting of w and G to get correct scaling
 res_old <- SelInd(
   w = w_old[w_old != 0],
   G = G[names(w_old[w_old != 0]),names(w_old[w_old != 0])],

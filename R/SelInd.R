@@ -227,7 +227,7 @@ SelInd <- function(
     
     # calc modified gain
     out$del_d_scaled[i,] <- (out$G %*% t(out$D) %*% R %*% bmod) / sqrt(var_mod)[1,1] # no scaling by i
-    out$del_d_abs[i,] <- out$del_d_scaled_new[i,] - d0 # would be gain different to previous
+    out$del_d_abs[i,] <- out$del_d_scaled[i,] - d0 # would be gain different to previous
     out$del_d_scaled[i,] <- out$del_d_abs[i,] /sum(abs(out$del_d_abs[i,]))
     #out$del_d_scaled_new_pook <- out$del_d_scaled_new_diff / diag(out$del_d_scaled_new_diff)
     
