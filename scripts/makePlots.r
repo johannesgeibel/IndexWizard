@@ -410,6 +410,7 @@ res_new <- SelInd(
 ## table 3A - mit H --------------------------------------------------------------------
 round(res_old$del_d_scaled, 2)
 round(res_old$del_d_scaled_new_diff, 4) # absolute difference in gain per trait
+round(res_old$del_d_scaled_new_diff/0.0001, 2)
 round(res_old$del_d_scaled_new, 2) # scaled so that sum of abs(rows) = 1
 round(res_old$del_d_scaled_new_pook, 2) # pook scaling
 
@@ -422,12 +423,15 @@ res_old <- SelInd(
   verbose = FALSE)
 round(res_old$del_d_scaled, 2)
 round(res_old$del_d_scaled_new_diff, 4) # absolute difference in gain per trait
+round(res_old$del_d_scaled_new_diff/0.0001, 2) 
 round(res_old$del_d_scaled_new, 2) # scaled so that sum of abs(rows) = 1
 round(res_old$del_d_scaled_new_pook, 2) # pook scaling
 
 ## table 3B --------------------------------------------------------------------
 round(res_new$del_d_scaled, 2) # old results
 round(res_new$del_d_scaled_new_diff, 4) # absolute difference in gain per trait
+round(res_new$del_d_scaled_new_diff/0.0001, 2)
+
 round(res_new$del_d_scaled_new, 2) # scaled so that sum of abs(rows) = 1
 rowSums(abs(res_new$del_d_scaled_new))
 
