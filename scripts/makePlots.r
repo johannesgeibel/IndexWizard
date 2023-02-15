@@ -157,7 +157,7 @@ if(savePlots){
   dev.off()
 }
 
-# figure 2 - measures of importance --------------------------------------------
+# old figure 2 - measures of importance - no longer in paper -----------------------------------
 
 
 res <- SelInd(w = w_old[tno],  G = G[tno,tno],  r2 = r2_old, H = H, verbose = FALSE)
@@ -203,7 +203,7 @@ dat[,traits:=factor(traits,levels = tno)]
 
 if(savePlots){
   svg(
-    'plots_publication/Fig2.svg', # file path
+    'plots_publication/Fig_old2.svg', # file path
     width = 17/cm(1), # plot width in cm transformed to inches
     height = 10/cm(1) # plot height
   )
@@ -211,7 +211,7 @@ if(savePlots){
   dev.off()
   # save plot as tiff
   tiff(
-    'plots_publication/Fig2.tiff', # file path
+    'plots_publication/Fig_old2.tiff', # file path
     width = 17, # plot width in cm
     height = 10, # plot height
     res = 600,
@@ -222,7 +222,7 @@ if(savePlots){
   dev.off()
 }
 
-# figure 3 - expected composition of phenotypic progress --------------------------------------------
+# figure 2 - expected composition of phenotypic progress --------------------------------------------
 
 
 res <- SelInd(w = w_old[tno],  G = G[tno,tno],  r2 = r2_old, H = H, h2 = h2[tno], verbose = FALSE)
@@ -245,7 +245,7 @@ pl1 <- ggplot(dat,
 
 if(savePlots){
   svg(
-    'plots_publication/Fig3.svg', # file path
+    'plots_publication/Fig2.svg', # file path
     width = 17/cm(1), # plot width in cm transformed to inches
     height = 8/cm(1) # plot height
   )
@@ -253,7 +253,7 @@ if(savePlots){
   dev.off()
   # save plot as tiff
   tiff(
-    'plots_publication/Fig3.tiff', # file path
+    'plots_publication/Fig2.tiff', # file path
     width = 17, # plot width in cm
     height = 8, # plot height
     res = 600,
@@ -264,7 +264,7 @@ if(savePlots){
   dev.off()
 }
 
-# figure 4 - predefined vs. effective economic weights -------------------------
+# figure 3 - predefined vs. effective economic weights -------------------------
 
 res <- SelInd(w = w_old[tno],  G = G[tno,tno],  r2 = r2_old, H = H, d_G_obs = deltautr, verbose = FALSE)
 
@@ -308,7 +308,7 @@ pl
 if(savePlots){
   # save plot as svg
   svg(
-    'plots_publication/Fig4.svg', # file path
+    'plots_publication/Fig3.svg', # file path
     width = 17/cm(1), # plot width in cm transformed to inches
     height = 8/cm(1) # plot height
   )
@@ -316,7 +316,7 @@ if(savePlots){
   dev.off()
   # save plot as tiff
   tiff(
-    'plots_publication/Fig4.tiff', # file path
+    'plots_publication/Fig3.tiff', # file path
     width = 17, # plot width in cm
     height = 8, # plot height
     res = 600,
@@ -327,7 +327,7 @@ if(savePlots){
   dev.off()
 }
 
-# figure 5 - composition of genetic trend old vs new -------------------------
+# figure 4 - composition of genetic trend old vs new -------------------------
 
 res_old <- SelInd(w = w_old,  G = G,  r2 = r2_old, verbose = FALSE)
 res_new <- SelInd(w = w_new,  G = G,  r2 = r2_new, verbose = FALSE)
@@ -373,7 +373,7 @@ pl
 if(savePlots){
   # save plot as svg
   svg(
-    'plots_publication/Fig5.svg', # file path
+    'plots_publication/Fig4.svg', # file path
     width = 17/cm(1), # plot width in cm transformed to inches
     height = 8/cm(1) # plot height
   )
@@ -381,7 +381,7 @@ if(savePlots){
   dev.off()
   # save plot as tiff
   tiff(
-    'plots_publication/Fig5.tiff', # file path
+    'plots_publication/Fig4.tiff', # file path
     width = 17, # plot width in cm
     height = 8, # plot height
     res = 600,
