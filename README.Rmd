@@ -31,7 +31,7 @@ You can install the development version of `IndexWizard` from [GitHub](https://g
 
 ```{r eval=FALSE, include=TRUE}
 # install.packages("devtools")
-devtools::install_github("johannesgeibel/IndexWizard")
+devtools::install_github("johannesgeibel/IndexWizard", build_vignettes = TRUE)
 ```
 
 Note that `devtools` requires [Rtools](https://cran.r-project.org/bin/windows/Rtools/) to be installed on Windows systems.

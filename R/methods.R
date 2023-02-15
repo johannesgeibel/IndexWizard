@@ -111,7 +111,7 @@ print.SelInd <- function(x, ...){
   cat("\nAnalytic measures:\n")
   cat("Correlation between the overall index and the phenotype of trait j (`r_IP`) and\n")
   cat("the loss in prediction accuracy when omitting trait j from the index (`r_IH`).\n")
-  cat("Further the first derivative of d_G_exp with respect to w (`del_d_scaled`) with rows\nbeing scaled  so that sum(abs()) = 1.\n")
+  cat("Further the approximate first derivative of d_G_exp with respect to w (`del_d_scaled`) with rows\nbeing scaled  so that sum(abs()) = 1.\n")
   if(!is.null(x$r_IP)){
     cat("\n$r_IP:\n")
     print(round(x$r_IP,2))

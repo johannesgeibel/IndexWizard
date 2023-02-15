@@ -7,6 +7,7 @@
 #' @param i Selection intensity
 #' @param h2 named numeric vector of length n containing heritabilities for the traits
 #' @param d_G_obs named numeric vector of length n containing the observed composition of the genetic gain scaled in genetic standard deviations. If sum(d_G_obs) != 1, it will be rescaled.
+#' @param delta small increment to calculate approximate first derivative
 #' @param verbose Shall information be printed?
 #'
 #' @details The framework allows to have less traits in the selection index than in the breeding goal (m < n). Calculation of realized economic weights, however, requires m == n.
@@ -40,6 +41,7 @@ SelInd <- function(
     i = NULL,
     h2 = NULL,
     d_G_obs = NULL,
+    delta = 0.0001,
     verbose = TRUE
 ){
   # initialize central object --------------------------------------------------
@@ -64,8 +66,8 @@ SelInd <- function(
     dG = NULL,
     r_IP = NULL,
     r_IH = NULL,
-    del_d = NULL,
     del_d_scaled = NULL,
+    delta = delta,
     D = NULL # not printed
   )
   class(out) <- "SelInd"
@@ -210,18 +212,27 @@ SelInd <- function(
                          (t(out$b) %*% R %*% ( out$D %*% out$G %*% t(out$D) + out$E) %*% R %*% out$b %*% diag(solve(R %*% ( out$D %*% out$G %*% t(out$D) + out$E) %*% R))) )
 
   # first derivative -----------------------------------------------------------
-  if(!is.null(out$i)){
-    out$del_d <- (out$i / sqrt(out$var_I))[1,1] * out$G %*% t(out$D) %*% solve(out$D %*% out$G %*% t(out$D) + out$E) %*% out$D %*% out$G
-    #out$del_d <- (out$i / sqrt(out$var_I))[1,1] * out$G %*% t(out$D) %*% solve(out$D %*% out$G %*% t(out$D) + out$E) %*% out$D %*% out$G %*% w
-  }else{
-    if(verbose) message("- first derivative of d_G_exp by w can only be calculated if selescion intensity (i) is supplied\n  --> calculating only scaled version")
-  }
-  out$del_d_scaled <- out$G %*% t(out$D) %*% solve(out$D %*% out$G %*% t(out$D) + out$E) %*% out$D %*% out$G
-  for(i in 1:nrow(out$del_d_scaled)){
-    srow <- sum(abs(out$del_d_scaled[i,]))
-    out$del_d_scaled[i,] <- out$del_d_scaled[i,] / srow
-  }
+  out$del_d_scaled <- matrix(0,length(out$w),length(out$w),dimnames = list(names(out$w),names(out$w)))
+  out$del_d_abs  <- out$del_d_scaled
+  d0 <- t(out$G %*% t(out$D) %*% R %*% out$b) / (sqrt(out$var_I)[1,1])
 
+  for(i in 1:length(out$w)){
+    # set up modified w
+    wmod <- out$w*(1-delta/(1-out$w[i]))
+    wmod[i]<-out$w[i]+delta
+    
+    # get modified b
+    bmod <- solve(R %*% (out$D %*% out$G %*% t(out$D) + out$E) %*% R) %*% R %*% out$D %*% out$G %*% wmod
+    var_mod <- t(bmod) %*% R %*% (out$D %*% out$G %*% t(out$D) + out$E) %*% R %*% bmod
+    
+    # calc modified gain
+    out$del_d_scaled[i,] <- (out$G %*% t(out$D) %*% R %*% bmod) / sqrt(var_mod)[1,1] # no scaling by i
+    out$del_d_abs[i,] <- out$del_d_scaled[i,] - d0 # would be gain different to previous
+    out$del_d_scaled[i,] <- out$del_d_abs[i,] /sum(abs(out$del_d_abs[i,]))
+    #out$del_d_scaled_new_pook <- out$del_d_scaled_new_diff / diag(out$del_d_scaled_new_diff)
+    
+  }
+  
   # realized weights -----------------------------------------------------
 
   if(!is.null(out$d_G_obs)){

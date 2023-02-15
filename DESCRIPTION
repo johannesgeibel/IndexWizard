@@ -1,7 +1,7 @@
 Package: IndexWizard
 Type: Package
 Title: Constructing and Analyzing Selection Indices Based on Estimated Breeding Values in Animal and Plant Breeding
-Version: 0.1.3.2
+Version: 0.2.0.0
 Authors@R: c(
     person("Johannes","Geibel",email = "johannes.geibel@uni-goettingen.de",role = c("aut","cre"),comment = c(ORCID = "0000-0001-7172-3263")),
     person("Christian","Reimer",role = c("aut"),comment = c(ORCID = "0000-0002-9697-2511")),
