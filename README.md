@@ -6,7 +6,7 @@
 <!-- badges: start -->
 
 [![](https://img.shields.io/badge/doi-https://doi.org/10.5281/zenodo.6977265-blue.svg)](https://doi.org/https://doi.org/10.5281/zenodo.6977265)
-[![](https://img.shields.io/badge/devel%20version-0.2.0.0-blue.svg)](https://github.com/johannesgeibel/IndexWizard)
+[![](https://img.shields.io/badge/devel%20version-0.2.1.0-blue.svg)](https://github.com/johannesgeibel/IndexWizard)
 [![](https://www.r-pkg.org/badges/version/IndexWizard?color=orange)](https://cran.r-project.org/package=IndexWizard)
 
 [![CRAN

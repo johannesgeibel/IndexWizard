@@ -10,7 +10,7 @@ Authors@R: c(
     person("Stefan","Rensing",role = c("aut")),
     person("Henner","Simianer",email = "hsimian@gwdg.de",role = c("aut"),comment = c(ORCID = "0000-0002-7551-3797"))
     )
-Description: Allows the construction selection indices based on estimated breeding values in animal and plant breeding and to calculate several analytic measures around to assess its impact on gentic and phenotypic progress. The methodology thereby allows to analyze genetic gain of traits in the breeding goal which are not part of the actual index and automatically computes several analytical measures. It further allows to retrospectively derive realized economic weights from observed genetic trends. The framework is discribed in Simianer, H., Heise, J., Rensing, S., Pook, T. Geibel, J. and Reimer, C. (2023) <doi:10.1186/s12711-023-00807-0>.
+Description: Allows the construction selection indices based on estimated breeding values in animal and plant breeding and to calculate several analytic measures around to assess its impact on genetic and phenotypic progress. The methodology thereby allows to analyze genetic gain of traits in the breeding goal which are not part of the actual index and automatically computes several analytic measures. It further allows to retrospectively derive realized economic weights from observed genetic trends. The framework is described in Simianer, H., Heise, J., Rensing, S., Pook, T. Geibel, J. and Reimer, C. (2023) <doi:10.1186/s12711-023-00807-0>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

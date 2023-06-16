@@ -2,6 +2,7 @@
 ^\.Rproj\.user$
 ^test
 ^README\.Rmd$
+^README\.md$
 ^LICENSE\.md$
 ^plots_publication
 ^scripts

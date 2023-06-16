@@ -280,7 +280,7 @@ Further, the first derivative of $d$ with respect to $w$ ($\frac{\delta d}{\delt
 round(res_old$del_d_scaled, 2)
 ```
 
-> Since V0.2.0.0, we calculate an approximate derivative by incrimenting the weight of one trait slightly, while reducing the weight of the other traits accordingly, to be able to account for the side restriction that $\sum w = 0$.
+> Since V0.2.0.0, we calculate an approximate derivative by incrementing the weight of one trait slightly, while reducing the weight of the other traits accordingly, to be able to account for the side restriction that $\sum w = 0$.
 
 ## Realized gain
 
