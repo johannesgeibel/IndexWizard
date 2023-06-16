@@ -10,3 +10,5 @@ inst/doc
 plots_publication
 /doc/
 /Meta/
+Rprof.out
+tmp.txt
