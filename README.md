@@ -6,26 +6,29 @@
 <!-- badges: start -->
 
 [![](https://img.shields.io/badge/doi-https://doi.org/10.5281/zenodo.6977265-blue.svg)](https://doi.org/https://doi.org/10.5281/zenodo.6977265)
-[![](https://img.shields.io/badge/devel%20version-0.1.3.2-blue.svg)](https://github.com/johannesgeibel/IndexWizard)
+[![](https://img.shields.io/badge/devel%20version-0.2.0.0-blue.svg)](https://github.com/johannesgeibel/IndexWizard)
 [![](https://www.r-pkg.org/badges/version/IndexWizard?color=orange)](https://cran.r-project.org/package=IndexWizard)
 
 [![CRAN
-checks](https://cranchecks.info/badges/summary/IndexWizard)](https://cran.r-project.org/web/checks/check_results_IndexWizard.html)
+checks](https://badges.cranchecks.info/summary/IndexWizard.svg)](https://cran.r-project.org/web/checks/check_results_IndexWizard.html)
 [![License:
 MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://cran.r-project.org/web/licenses/MIT)
 
 <!-- badges: end -->
 
 The goal of ‘IndexWizard’ is to provide a framework for the exploration
-of effects of complex selection indices. It allows to construct
-selection indices based on estimated breeding values in animal and plant
-breeding and to calculate several analytic measures around. The
-methodology thereby allows to analyze genetic gain of traits in the
-breeding goal which are not part of the actual index and automatically
-computes several analytic measures. It further allows to retrospectively
-derive realized economic weights from observed genetic trends. See
-Simianer *et al.* (submitted to GSE) for a detailed description of the
-methodology.
+of effects of complex selection indices on the genetic and phenotypic
+progress of a population. It allows to construct selection indices based
+on estimated breeding values in animal and plant breeding and to
+calculate several analytic measures around. The methodology thereby
+allows to analyze genetic gain of traits in the breeding goal that are
+not part of the actual index and automatically computes several analytic
+measures. It further allows to retrospectively derive realized economic
+weights from observed genetic trends. See [Simianer *et al.* “How
+economic weights translate into genetic and phenotypic progress, and
+vice versa” Genet Sel Evol 55, 38
+(2023)](https://doi.org/10.1186/s12711-023-00807-0) for a detailed
+description of the methodology and a complex example.
 
 ## Installation
 
@@ -80,4 +83,5 @@ vignette("CaseStudy", package = "IndexWizard")
 
 Further find the analysis
 [script](https://github.com/johannesgeibel/IndexWizard/blob/main/scripts/makePlots.r)
-for Simianer *et al.* (submitted to GSE) in this repository.
+for [Simianer *et al.*](https://doi.org/10.1186/s12711-023-00807-0) in
+this repository.

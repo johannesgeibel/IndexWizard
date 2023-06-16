@@ -3,7 +3,9 @@
 #'
 #' @param x An object of class SelInd
 #' @param ... does nothing, only for compatibility with the generic function
-#'
+#' 
+#' @return No return value, only prints formatted output.
+#' 
 #' @export
 #' @examples
 #' tn <- c("RZM", "RZN", "RZEo")
@@ -133,6 +135,8 @@ print.SelInd <- function(x, ...){
 #'
 #' @param object An object of class SelInd
 #' @param ... does nothing, only for compatibility with the generic function
+#'
+#' @return No return value, only prints a summary of the SelInd object.
 #'
 #' @export
 #' @examples

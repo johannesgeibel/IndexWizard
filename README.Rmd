@@ -18,12 +18,12 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 
 `r badger::badge_doi("https://doi.org/10.5281/zenodo.6977265", "blue")` `r badger::badge_devel("johannesgeibel/IndexWizard", "blue")` `r badger::badge_cran_release("IndexWizard", "orange")`
-  
+
 `r badger::badge_cran_checks("IndexWizard")` `r badger::badge_license("MIT")`
 
 <!-- badges: end -->
 
-The goal of 'IndexWizard' is to provide a framework for the exploration of effects of complex selection indices. It allows to construct selection indices based on estimated breeding values in animal and plant breeding and to calculate several analytic measures around. The methodology thereby allows to analyze genetic gain of traits in the breeding goal which are not part of the actual index and automatically computes several analytic measures. It further allows to retrospectively derive realized economic weights from observed genetic trends. See Simianer *et al.* (submitted to GSE) for a detailed description of the methodology.
+The goal of 'IndexWizard' is to provide a framework for the exploration of effects of complex selection indices on the genetic and phenotypic progress of a population. It allows to construct selection indices based on estimated breeding values in animal and plant breeding and to calculate several analytic measures around. The methodology thereby allows to analyze genetic gain of traits in the breeding goal that are not part of the actual index and automatically computes several analytic measures. It further allows to retrospectively derive realized economic weights from observed genetic trends. See [Simianer *et al.* "How economic weights translate into genetic and phenotypic progress, and vice versa" Genet Sel Evol 55, 38 (2023)](https://doi.org/10.1186/s12711-023-00807-0) for a detailed description of the methodology and a complex example.
 
 ## Installation
 
@@ -68,4 +68,4 @@ Read the vignette `CaseStudy` for a detailed introduction, covering different us
 vignette("CaseStudy", package = "IndexWizard")
 ```
 
-Further find the analysis [script](https://github.com/johannesgeibel/IndexWizard/blob/main/scripts/makePlots.r) for Simianer *et al.* (submitted to GSE) in this repository.
+Further find the analysis [script](https://github.com/johannesgeibel/IndexWizard/blob/main/scripts/makePlots.r) for [Simianer *et al.*](https://doi.org/10.1186/s12711-023-00807-0) in this repository.
