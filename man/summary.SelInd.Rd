@@ -11,6 +11,9 @@
 
 \item{...}{does nothing, only for compatibility with the generic function}
 }
+\value{
+No return value, only prints a summary of the SelInd object.
+}
 \description{
 Function to summarize the content of a SelInd object.
 }

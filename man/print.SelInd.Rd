@@ -11,6 +11,9 @@
 
 \item{...}{does nothing, only for compatibility with the generic function}
 }
+\value{
+No return value, only prints formatted output.
+}
 \description{
 Function to nicely print a SelInd object
 }

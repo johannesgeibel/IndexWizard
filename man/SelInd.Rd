@@ -4,7 +4,17 @@
 \alias{SelInd}
 \title{Function to calculate selection index}
 \usage{
-SelInd(w, G, r2, H = NULL, i = NULL, h2 = NULL, d_G_obs = NULL, verbose = TRUE)
+SelInd(
+  w,
+  G,
+  r2,
+  H = NULL,
+  i = NULL,
+  h2 = NULL,
+  d_G_obs = NULL,
+  delta = 1e-04,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{w}{Numeric vector of n economic weights. Traits present in G, but not part of the index need to be coded as 0. If traits of G are missing, they will be added automatically with zero weight. Required.}
@@ -20,6 +30,8 @@ SelInd(w, G, r2, H = NULL, i = NULL, h2 = NULL, d_G_obs = NULL, verbose = TRUE)
 \item{h2}{named numeric vector of length n containing heritabilities for the traits}
 
 \item{d_G_obs}{named numeric vector of length n containing the observed composition of the genetic gain scaled in genetic standard deviations. If sum(d_G_obs) != 1, it will be rescaled.}
+
+\item{delta}{small increment to calculate approximate first derivative}
 
 \item{verbose}{Shall information be printed?}
 }
