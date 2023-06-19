@@ -27,7 +27,13 @@ The goal of 'IndexWizard' is to provide a framework for the exploration of effec
 
 ## Installation
 
-You can install the development version of `IndexWizard` from [GitHub](https://github.com/) with:
+You can either install `IndexWizard` from [CRAN](https://cran.r-project.org/web/packages/IndexWizard/index.html) the usual way:
+
+```{r eval=FALSE, include=TRUE}
+install.packages("IndexWizard")
+```
+
+Or directly install the development version of `IndexWizard` from [GitHub](https://github.com/) with:
 
 ```{r eval=FALSE, include=TRUE}
 # install.packages("devtools")
@@ -36,7 +42,6 @@ devtools::install_github("johannesgeibel/IndexWizard", build_vignettes = TRUE)
 
 Note that `devtools` requires [Rtools](https://cran.r-project.org/bin/windows/Rtools/) to be installed on Windows systems.
 
-It is planned to submit the package to CRAN soon.
 
 ## Example
 

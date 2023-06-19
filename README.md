@@ -32,7 +32,15 @@ description of the methodology and a complex example.
 
 ## Installation
 
-You can install the development version of `IndexWizard` from
+You can either install `IndexWizard` from
+[CRAN](https://cran.r-project.org/web/packages/IndexWizard/index.html)
+the usual way:
+
+``` r
+install.packages("IndexWizard")
+```
+
+Or directly install the development version of `IndexWizard` from
 [GitHub](https://github.com/) with:
 
 ``` r
@@ -43,8 +51,6 @@ devtools::install_github("johannesgeibel/IndexWizard", build_vignettes = TRUE)
 Note that `devtools` requires
 [Rtools](https://cran.r-project.org/bin/windows/Rtools/) to be installed
 on Windows systems.
-
-It is planned to submit the package to CRAN soon.
 
 ## Example
 
