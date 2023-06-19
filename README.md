@@ -11,6 +11,7 @@
 
 [![CRAN
 checks](https://badges.cranchecks.info/summary/IndexWizard.svg)](https://cran.r-project.org/web/checks/check_results_IndexWizard.html)
+[![](http://cranlogs.r-pkg.org/badges/grand-total/IndexWizard)](https://cran.r-project.org/package=IndexWizard)
 [![License:
 MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://cran.r-project.org/web/licenses/MIT)
 
