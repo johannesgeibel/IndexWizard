@@ -29,7 +29,9 @@ weights from observed genetic trends. See [Simianer *et al.* “How
 economic weights translate into genetic and phenotypic progress, and
 vice versa” Genet Sel Evol 55, 38
 (2023)](https://doi.org/10.1186/s12711-023-00807-0) for a detailed
-description of the methodology and a complex example.
+description of the methodology and a complex example. Also find the [pdf
+of a Poster](PosterIndexWizard_JohannesGeibel_20221008.pdf) in this
+repository.
 
 ## Installation
 
